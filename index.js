@@ -1,14 +1,12 @@
-// load routes
-// load request handlers
-// standard, shared handlers?
+const server = require("./server");
 
-var server = require("./server");
-var router = require("./router");
-var requests = require("./requests");
+const apps = {};
+const appsDir = "./apps";
 
-var handle = {};
-handle["/"] = requests.start;
-handle["/start"] = requests.start;
-handle["/upload"] = requests.upload;
+require("fs").readdirSync(appsDir, { withFileTypes: true}).forEach(function(appDirEntry) {
+    if (appDirEntry.isDirectory()) {
+        apps[appDirEntry.name] = require(appsDir + '/' + appDirEntry.name);
+    }
+});
 
-server.start(router.route, handle);
+server.start(apps);

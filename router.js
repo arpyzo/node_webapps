@@ -1,17 +1,15 @@
-var url = require("url");
-
-function route(handle, request, requestData, response) {
-    path = url.parse(request.url).pathname;
-    console.log("Routing request for " + path);
-
-    if (typeof handle[path] === 'function') {
-        handle[path](request, requestData, response);
+function route(apps, request, requestData, response) {
+    matches = request.url.match(/\/([^\/]+)\/?(.*)/);
+    if (matches && matches[1] in apps) {
+        request.url = matches[2];
+        apps[matches[1]].route(request, requestData, response);
     } else {
-        console.log("No request handler found for " + path);
+        console.log("No app prefix matched to URL!");
 
-        response.writeHead(404, {"Content-Type": "text/plain"});
-        response.write("404 Not found");
-        response.end();
+        response.return404();
+        //response.writeHead(404, {"Content-Type": "text/plain"});
+        //response.write("404 Not found");
+        //response.end();
     }
 }
 
