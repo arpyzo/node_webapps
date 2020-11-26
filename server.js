@@ -2,23 +2,17 @@ const http = require("http");
 const httpExtensions = require("./httpExtensions");
 const router = require("./router");
 
-function start(apps, port = 8888) {
+function start(apps, port = 8080) {
     function onRequest(request, response) {
         request.setEncoding("utf8");
 
-        //console.log("Request method: " + request.method);
-        //console.log("Request raw headers: " + request.rawHeaders);
+        console.log(`Received request for ${request.url}`);
 
-        var requestData = "";
-
+        let requestData = "";
         request.addListener("data", function(requestDataChunk) {
-            //console.log(`Received data chunk\n-->${requestDataChunk}<--`);
             requestData += requestDataChunk;
         });
-
         request.addListener("end", function() {
-            //console.log(`-->${requestDataChunks}<--`);
-            
             router.route(apps, request, requestData, response);
         });
     }

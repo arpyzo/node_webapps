@@ -1,15 +1,14 @@
 function route(apps, request, requestData, response) {
-    matches = request.url.match(/\/([^\/]+)\/?(.*)/);
-    if (matches && matches[1] in apps) {
-        request.url = matches[2];
-        apps[matches[1]].route(request, requestData, response);
+    let urlPrefix = request.stripURLPrefix();
+    if (urlPrefix in apps) {
+        try {
+            apps[urlPrefix].route(request, requestData, response);
+        } catch(error) {
+            console.trace("Uncaught exception: " + error);
+            response.return500();
+        }
     } else {
-        console.log("No app prefix matched to URL!");
-
         response.return404();
-        //response.writeHead(404, {"Content-Type": "text/plain"});
-        //response.write("404 Not found");
-        //response.end();
     }
 }
 

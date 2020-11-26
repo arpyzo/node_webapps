@@ -5,7 +5,7 @@ const appsDir = "./apps";
 
 require("fs").readdirSync(appsDir, { withFileTypes: true}).forEach(function(appDirEntry) {
     if (appDirEntry.isDirectory()) {
-        apps[appDirEntry.name] = require(appsDir + '/' + appDirEntry.name);
+        apps[appDirEntry.name] = require(appsDir + "/" + appDirEntry.name);
     }
 });
 
