@@ -2,7 +2,7 @@ const http = require("http");
 
 class Request extends http.IncomingMessage {
     stripURLPrefix() {
-        let matches = this.url.match(/\/([^\/]+)\/?(.*)/);
+        let matches = this.url.match(/\/([^\/]+)(.*)/);
         if (matches) {
             this.url = matches[2];
             return matches[1];
@@ -12,6 +12,17 @@ class Request extends http.IncomingMessage {
 }
 
 class Response extends http.ServerResponse {
+    returnHTML(html) {
+        this.writeHead(200, {"Content-Type": "text/html"});
+        this.write(html);
+        this.end();
+    }
+
+    redirect(code, url) {
+        this.writeHead(code, {"Location": url});
+        this.end();
+    }
+
     return404() {
         this.writeHead(404, {"Content-Type": "text/plain"});
         this.write("404 Not found\n");

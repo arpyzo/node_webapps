@@ -1,16 +1,14 @@
 function route(request, requestData, response) {
     console.log(`App money will handle ${request.url}`);
 
-//    if (request.url == "") {
-        showLandingPage(response);
-        return;
-//    } else if (request.url == "upload") {
-//        parseCSV(requestData);
-//    }
-
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write(`App money handled '${request.url}'\n`);
-    response.end();
+    if (request.url == "/") {
+        response.returnHTML(require("fs").readFileSync(__dirname + "/index.html"));
+        //showLandingPage(response);
+    } else if (request.url == "/upload") {
+        parseCSV(requestData);
+    } else {
+        response.return404();
+    }
 }
 
 function showLandingPage(response) {
