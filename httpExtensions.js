@@ -1,6 +1,8 @@
 const http = require("http");
 
 class Request extends http.IncomingMessage {
+    queryParams;
+
     stripURLPrefix() {
         let matches = this.url.match(/\/([^\/]+)(.*)/);
         if (matches) {
@@ -9,17 +11,42 @@ class Request extends http.IncomingMessage {
         }
         return null;
     }
+
+    getQueryParam(param) {
+        if (this.queryParams === undefined) {
+            this.queryParams = (new URL(this.url, "http://example.com")).searchParams;
+        }
+        return this.queryParams.get(param);
+    }
 }
 
 class Response extends http.ServerResponse {
     returnHTML(html) {
-        this.writeHead(200, {"Content-Type": "text/html"});
-        this.write(html);
+        this.returnContent("text/html", html);
+    }
+
+    returnJS(js) {
+        this.returnContent("text/javascript", js);
+    }
+
+    returnCSS(css) {
+        this.returnContent("text/css", css);
+    }
+
+    returnContent(type, content) {
+        this.writeHead(200, {"Content-Type": type});
+        this.write(content);
         this.end();
     }
 
     redirect(code, url) {
         this.writeHead(code, {"Location": url});
+        this.end();
+    }
+
+    return403() {
+        this.writeHead(403, {"Content-Type": "text/plain"});
+        this.write("403 Bad request\n");
         this.end();
     }
 
