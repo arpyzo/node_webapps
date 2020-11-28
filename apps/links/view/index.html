@@ -2,46 +2,38 @@
 <html>
 <head>
     <meta charset="us-ascii">
-<!--
-    <script src="js/jquery-3.2.1.js"></script>
-    <script src="js/url_param.js"></script>
-    <script src="js/link_divs.js"></script>
--->
-    <script src="js/load_links.js"></script>
-<!--    <script src="js/append_link.js"></script>
-    <script src="js/remove_link.js"></script>
--->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/app_view.js"></script>
+
     <link rel="stylesheet" href="css/links.css">
 </head>
 
 <body>
-    <a href="?category=reference">Reference</a>
-    <a href="?category=try">Try This</a>
-    <a href="?category=xfer">Xfer</a>
-    <a href="?category=misc">Misc</a>
-    <a href="?category=ansible">Ansible</a>
-    <a href="?category=kubernetes">Kubernetes</a>
-    <a href="?category=ansibledocker">Ansible+Docker</a>
-    <a href="?category=cplusplus">C++</a>
-    <a href="?category=devops">DevOps</a>
-    <a href="?category=aws">AWS</a>
-    <a href="?category=docker">Docker</a>
-    <a href="?category=frontend">Front End</a>
-    <a href="?category=go">Go</a>
-    <a href="?category=zsh">ZSH</a>
-    <a href="?category=nodejs">Node.js</a>
-    <a href="?category=database">DB</a>
-    <a href="?category=python">Python</a>
-    <a href="?category=ruby">Ruby</a>
-    <a href="?category=javascript">JavaScript</a>
-    <a href="?category=programming">Programming</a>
-    <a href="?category=swift">Swift</a>
+    <a href="reference">Reference</a>
+    <a href="try">Try This</a>
+    <a href="xfer">Xfer</a>
+    <a href="misc">Misc</a>
+    <a href="ansible">Ansible</a>
+    <a href="kubernetes">Kubernetes</a>
+    <a href="ansibledocker">Ansible+Docker</a>
+    <a href="cplusplus">C++</a>
+    <a href="devops">DevOps</a>
+    <a href="aws">AWS</a>
+    <a href="docker">Docker</a>
+    <a href="frontend">Front End</a>
+    <a href="go">Go</a>
+    <a href="zsh">ZSH</a>
+    <a href="nodejs">Node.js</a>
+    <a href="database">DB</a>
+    <a href="python">Python</a>
+    <a href="ruby">Ruby</a>
+    <a href="javascript">JavaScript</a>
+    <a href="programming">Programming</a>
+    <a href="swift">Swift</a>
     <br>
 
-    <button id="add" type="button">Add</button>
-    <input id="new-link" type="text" size="100">
-    <br>
-
+    <div id="add-input"></div>
     <div id="links"></div>
 </body>
 </html>

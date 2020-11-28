@@ -21,6 +21,11 @@ function handle(request, requestData, response) {
         return response.return403();
     }
  
+    if (request.url == "/api/remove") {
+        console.log(requestData);
+        //return response.return403();
+    }
+ 
     response.return404();
 }
 
