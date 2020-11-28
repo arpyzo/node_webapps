@@ -1,4 +1,4 @@
-function route(request, requestData, response) {
+function handle(request, requestData, response) {
     console.log(`App money will handle ${request.url}`);
 
     if (request.url == "/") {
@@ -16,4 +16,4 @@ function parseCSV(requestData) {
     });
 }
 
-exports.route = route;
+exports.handle = handle;

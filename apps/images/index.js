@@ -1,4 +1,4 @@
-function route(request, requestData, response) {
+function handle(request, requestData, response) {
     console.log(`App images will handle ${request.url}`);
 
     if (request.url == "upload") {
@@ -19,4 +19,4 @@ function saveImage(requestData) {
     });
 }
 
-exports.route = route;
+exports.handle = handle;

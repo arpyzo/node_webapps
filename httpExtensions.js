@@ -1,26 +1,25 @@
 const http = require("http");
 
 class Request extends http.IncomingMessage {
+    app;
     queryParams;
 
-    stripURLPrefix() {
-        let matches = this.url.match(/\/([^\/]+)(.*)/);
-        if (matches) {
-            this.url = matches[2];
-            return matches[1];
-        }
-        return null;
-    }
+    parseURL() {
+        let url = new URL(this.url, "http://" + this.headers.host);
 
-    getQueryParam(param) {
-        if (this.queryParams === undefined) {
-            this.queryParams = (new URL(this.url, "http://example.com")).searchParams;
-        }
-        return this.queryParams.get(param);
+        let match = url.pathname.match(/\/([^\/]+)(.*)/);
+        this.app = match ? match[1] : null;
+        this.url = match ? match[2] : null;
+
+        this.queryParams = url.searchParams;
     }
 }
 
 class Response extends http.ServerResponse {
+    returnText(text) {
+        this.returnContent("text/plain", text);
+    }
+
     returnHTML(html) {
         this.returnContent("text/html", html);
     }
