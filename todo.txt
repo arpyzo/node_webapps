@@ -1,3 +1,5 @@
 Logging
 
 Environment variables (ex: upload locations)
+
+API Validation

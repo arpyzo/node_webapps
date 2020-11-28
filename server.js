@@ -6,7 +6,7 @@ function start(apps, port = 8080) {
     function onRequest(request, response) {
         request.setEncoding("utf8");
 
-        console.log(`Received request for ${request.url}`);
+        //console.log(`Received request for ${request.url}`);
 
         let requestData = "";
         request.addListener("data", function(requestDataChunk) {

@@ -43,9 +43,9 @@ class Response extends http.ServerResponse {
         this.end();
     }
 
-    return403() {
-        this.writeHead(403, {"Content-Type": "text/plain"});
-        this.write("403 Bad request\n");
+    return400(error = "") {
+        this.writeHead(400, {"Content-Type": "text/plain"});
+        this.write(`400 Bad request\n${error}\n`);
         this.end();
     }
 
@@ -55,9 +55,9 @@ class Response extends http.ServerResponse {
         this.end();
     }
 
-    return500() {
+    return500(error = "") {
         this.writeHead(500, {"Content-Type": "text/plain"});
-        this.write("500 Internal server error\n");
+        this.write(`500 Internal server error\n${error}\n`);
         this.end();
     }
 }

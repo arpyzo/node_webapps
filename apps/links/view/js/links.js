@@ -15,12 +15,13 @@ function ajaxLoad(category) {
     $.ajax({
         type: 'GET',
         url: 'api/load?category=' + category,
+        timeout: 2000,
         success: function(links) {
             displayLinks(links);
             setupAddButton();
         },
         error: function(data, status, error) {
-            alert("AJAX fail!\nStatus: " + status + "\nError: " + error);
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
         }
     });
 }
@@ -49,17 +50,19 @@ function setupAddButton() {
     });
 }
 
-function ajaxAppend(file, link) {
+function ajaxAppend(category, link) {
     $.ajax({
-        type: 'POST',
-        url: 'cgi/append_file.cgi',
-        contentType: 'text/plain',
-        data: { filename: file, line: link },
+        type: 'PUT',
+        url: 'api/append',
+        contentType: 'application/json',
+        data: JSON.stringify({ category: category, link: link }),
+        timeout: 2000,
         success: function() {
-            appendLinkDiv(link); $("#new-link").val('');
+            appendLinkDiv(link);
+            $("#new-link").val('');
         },
         error: function(data, status, error) {
-            alert("AJAX fail!\nStatus: " + status + "\nError: " + error);
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
         }
     });
 }
@@ -89,10 +92,15 @@ function ajaxRemove(category, linkNum, link) {
     $.ajax({
         type: 'DELETE',
         url: 'api/remove',
-        contentType: 'text/plain',
-        data: { category: category, link: link },
-        success: function() { removeLinkDiv(linkNum); },
-        error: function(data, status, error) { alert("AJAX fail!\nStatus: " + status + "\nError: " + error); }
+        contentType: 'application/json',
+        data: JSON.stringify({ category: category, link: link }),
+        timeout: 2000,
+        success: function() {
+            removeLinkDiv(linkNum);
+        },
+        error: function(data, status, error) {
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+        }
     });
 }
 
