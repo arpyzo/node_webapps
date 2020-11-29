@@ -1,5 +1,5 @@
 Logging
 
-Environment variables (ex: upload locations)
+Conf
 
 API Validation

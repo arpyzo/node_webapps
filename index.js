@@ -1,5 +1,6 @@
 const server = require("./server");
 
+const port = 8080;
 const apps = {};
 const appsDir = "./apps";
 
@@ -9,4 +10,4 @@ require("fs").readdirSync(appsDir, { withFileTypes: true}).forEach(function(appD
     }
 });
 
-server.start(apps);
+server.start(apps, port);

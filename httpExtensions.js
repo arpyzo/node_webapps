@@ -17,47 +17,45 @@ class Request extends http.IncomingMessage {
 
 class Response extends http.ServerResponse {
     returnText(text) {
-        this.returnContent("text/plain", text);
+        this.returnContent(200, "text/plain", text);
     }
 
     returnHTML(html) {
-        this.returnContent("text/html", html);
+        this.returnContent(200, "text/html", html);
     }
 
     returnJS(js) {
-        this.returnContent("text/javascript", js);
+        this.returnContent(200, "text/javascript", js);
     }
 
     returnCSS(css) {
-        this.returnContent("text/css", css);
+        this.returnContent(200, "text/css", css);
     }
 
-    returnContent(type, content) {
-        this.writeHead(200, {"Content-Type": type});
+    return200() {
+        this.returnContent(200, "text/plain", `200 Success\n`);
+    }
+
+    return400(error = "") {
+        this.returnContent(400, "text/plain", `400 Bad request\n${error}\n`);
+    }
+
+    return404() {
+        this.returnContent(404, "text/plain", `404 Not found\n`);
+    }
+
+    return500(error = "") {
+        this.returnContent(500, "text/plain", `500 Internal server error\n${error}\n`);
+    }
+
+    returnContent(code, type, content) {
+        this.writeHead(code, {"Content-Type": type});
         this.write(content);
         this.end();
     }
 
     redirect(code, url) {
         this.writeHead(code, {"Location": url});
-        this.end();
-    }
-
-    return400(error = "") {
-        this.writeHead(400, {"Content-Type": "text/plain"});
-        this.write(`400 Bad request\n${error}\n`);
-        this.end();
-    }
-
-    return404() {
-        this.writeHead(404, {"Content-Type": "text/plain"});
-        this.write("404 Not found\n");
-        this.end();
-    }
-
-    return500(error = "") {
-        this.writeHead(500, {"Content-Type": "text/plain"});
-        this.write(`500 Internal server error\n${error}\n`);
         this.end();
     }
 }

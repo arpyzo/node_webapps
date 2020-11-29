@@ -1,5 +1,9 @@
 const fs = require("fs");
 
+function getCategoryFile(category) {
+    return "/Users/robert/Temp/links/" + category;
+}
+
 function handle(request, requestData, response) {
     console.log(`App links will handle ${request.url}`);
 
@@ -49,7 +53,8 @@ function handle(request, requestData, response) {
         }
 
         try {
-            return appendLink(appendData.category, appendData.link);
+            appendLink(appendData.category, appendData.link);
+            return response.return200();
         } catch(error) {
             console.trace(`Error appending link: ${error}`);
             return response.return500(error);
@@ -72,7 +77,8 @@ function handle(request, requestData, response) {
         }
 
         try {
-            return removeLink(appendData.category, appendData.link);
+            removeLink(appendData.category, appendData.link);
+            return response.return200();
         } catch(error) {
             console.trace(`Error removing link: ${error}`);
             return response.return500(error);
@@ -83,23 +89,23 @@ function handle(request, requestData, response) {
 }
 
 function doLinksExist(category) {
-    return fs.existsSync("/Users/robert/Projects/webapps/test_files/links_test");
+    return fs.existsSync(getCategoryFile(category));
 }
 
 function getLinks(category) {
-    return fs.readFileSync("/Users/robert/Projects/webapps/test_files/links_test");
+    return fs.readFileSync(getCategoryFile(category));
 }
 
 function appendLink(category, link) {
-    fs.appendFileSync("/Users/robert/Projects/webapps/test_files/links_test", link + "\n");
+    fs.appendFileSync(getCategoryFile(category), link + "\n");
 }
 
 function removeLink(category, link) {
-    let links = fs.readFileSync("/Users/robert/Projects/webapps/test_files/links_test", 'utf8').split("\n");
+    let links = fs.readFileSync(getCategoryFile(category), 'utf8').split("\n");
     let newLinks = links.filter(function(line) {
         return line != link;
     });
-    fs.writeFileSync("/Users/robert/Projects/webapps/test_files/links_test", newLinks.join("\n"));
+    fs.writeFileSync(getCategoryFile(category), newLinks.join("\n"));
 }
 
 exports.handle = handle;

@@ -2,7 +2,7 @@ const http = require("http");
 const httpExtensions = require("./httpExtensions");
 const router = require("./router");
 
-function start(apps, port = 8080) {
+function start(apps, port) {
     function onRequest(request, response) {
         request.setEncoding("utf8");
 
