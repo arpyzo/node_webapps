@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 function route(apps, request, requestData, response) {
     request.parseURL();
    
@@ -8,7 +10,7 @@ function route(apps, request, requestData, response) {
 
     if (request.app && request.app in apps) {
         if (request.url.endsWith("/jquery.js")) {
-            return response.returnJS(require("fs").readFileSync(__dirname + "/view_libs/jquery.js"));
+            return response.returnJS(fs.readFileSync(__dirname + "/view_libs/jquery.js"));
         }
 
         try {
