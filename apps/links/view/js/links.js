@@ -13,8 +13,8 @@ $(document).ready(function() {
 
 function ajaxLoad(category) {
     $.ajax({
-        type: 'GET',
-        url: 'api/load?category=' + category,
+        type: "GET",
+        url: "api/load?category=" + category,
         timeout: 2000,
         success: function(links) {
             displayLinks(links);
@@ -27,12 +27,12 @@ function ajaxLoad(category) {
 }
 
 function displayLinks(links) {
-    if (links.startsWith('Can\'t find links category: ')) {
-        $('#links').append(links);
+    if (links.startsWith("Can't find links category: ")) {
+        $("#links").append(links);
         return;
     }
 
-    let linkArray = links.split('\n');
+    let linkArray = links.split("\n");
     for(let i = 0; i < linkArray.length; i++) {
         if (linkArray[i]) {
             appendLinkDiv(linkArray[i]);
@@ -42,8 +42,8 @@ function displayLinks(links) {
 
 // Add Links
 function setupAddButton() {
-    $('#add-input').append('<button id="add" type="button">Add</button>');
-    $('#add-input').append('<input id="new-link" type="text" size="100">');
+    $("#add-input").append('<button id="add" type="button">Add</button>');
+    $("#add-input").append('<input id="new-link" type="text" size="100">');
 
     $("#add").click(function() {
         ajaxAppend(category, $("#new-link").val());
@@ -52,14 +52,14 @@ function setupAddButton() {
 
 function ajaxAppend(category, link) {
     $.ajax({
-        type: 'PUT',
-        url: 'api/append',
-        contentType: 'application/json',
+        type: "PUT",
+        url: "api/append",
+        contentType: "application/json",
         data: JSON.stringify({ category: category, link: link }),
         timeout: 2000,
         success: function() {
             appendLinkDiv(link);
-            $("#new-link").val('');
+            $("#new-link").val("");
         },
         error: function(data, status, error) {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
@@ -68,9 +68,9 @@ function ajaxAppend(category, link) {
 }
 
 function appendLinkDiv(link) {
-    $('#links').append('<div id="div-' + nextLinkId + '"></div>');
-    $('#div-' + nextLinkId).append('<button id="remove-' + nextLinkId + '" type="button">Remove</button>');
-    $('#div-' + nextLinkId).append('<a id="link-' + nextLinkId + '" href="' + link  + '">' + link + '</a><br><br>');
+    $("#links").append(`<div id="div-${nextLinkId}"></div>`);
+    $("#div-" + nextLinkId).append(`<button id="remove-${nextLinkId}" type="button">Remove</button>`);
+    $("#div-" + nextLinkId).append(`<a id="link-${nextLinkId}" href="${link}">${link}</a><br><br>`);
 
     // Set up remove handler
     $("#remove-" + nextLinkId).click(function() {
@@ -83,16 +83,16 @@ function appendLinkDiv(link) {
 // Remove Links
 function removeLink(linkNum) {
     if (category) {
-        link = $('#link-' + linkNum).attr('href');
+        link = $("#link-" + linkNum).attr("href");
         ajaxRemove(category, linkNum, link);
     }
 }
 
 function ajaxRemove(category, linkNum, link) {
     $.ajax({
-        type: 'DELETE',
-        url: 'api/remove',
-        contentType: 'application/json',
+        type: "DELETE",
+        url: "api/remove",
+        contentType: "application/json",
         data: JSON.stringify({ category: category, link: link }),
         timeout: 2000,
         success: function() {
@@ -105,5 +105,5 @@ function ajaxRemove(category, linkNum, link) {
 }
 
 function removeLinkDiv(linkNum) {
-    $('#div-' + linkNum).remove();
+    $("#div-" + linkNum).remove();
 }
