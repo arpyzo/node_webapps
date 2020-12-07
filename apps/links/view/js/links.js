@@ -42,8 +42,8 @@ function displayLinks(links) {
 
 // Add Links
 function setupAddButton() {
-    $("#add-input").append('<button id="add" type="button">Add</button>');
-    $("#add-input").append('<input id="new-link" type="text" size="100">');
+    $("#add-div").append('<button id="add" type="button">Add</button>');
+    $("#add-div").append('<input id="new-link" type="text" size="100">');
 
     $("#add").click(function() {
         ajaxAppend(category, $("#new-link").val());
