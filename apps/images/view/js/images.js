@@ -1,14 +1,20 @@
+// Globals
+var imageList;
+
 $(document).ready(function() {
-    ajaxLoad();
+    //ajaxLoad();
+    ajaxList();
 });
 
-function ajaxLoad() {
+function ajaxList() {
     $.ajax({
         type: "GET",
-        url: "api/random",
+        url: "api/list",
         timeout: 2000,
-        success: function(image) {
-            displayImage(image);
+        success: function(imageData) {
+            imageList = imageData.split("\n");
+            showRandomImage();
+            setupClickHandler();
         },
         error: function(data, status, error) {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
@@ -16,6 +22,32 @@ function ajaxLoad() {
     });
 }
 
-function displayImage(image) {
-    $("#image").attr("src", `data:image/${image.slice(3)};base64,${image.substr(3)}`);
+//function ajaxLoad() {
+//    $.ajax({
+//        type: "GET",
+//        url: "api/random",
+//        timeout: 2000,
+//        success: function(image) {
+//            displayImage(image);
+//        },
+//        error: function(data, status, error) {
+//            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+//        }
+//    });
+//}
+
+function setupClickHandler() {
+    $(document).click(function() {
+            showRandomImage();
+    });
 }
+
+function showRandomImage() {
+    if (imageList) {
+        $("#image").attr("src", imageList[Math.floor(Math.random() * imageList.length)]);
+    }
+}
+
+//function displayImage(image) {
+//    $("#image").attr("src", `data:image/${image.slice(3)};base64,${image.substr(3)}`);
+//}

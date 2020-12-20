@@ -2,7 +2,8 @@ const fs = require("fs");
 
 class Images {
     constructor(saveDir) {
-        this.imageDir = saveDir + "images/";
+        //this.imageDir = saveDir + "images/";
+        this.imageDir = "/var/www/images";
     }
 
     handle(request, requestData, response) {
@@ -20,6 +21,10 @@ class Images {
             return response.returnCSS(fs.readFileSync(__dirname + "/view" + request.url));
         }
 
+        if (request.url == "/api/list") {
+            return response.returnText(this.getImageList());
+        }
+
         if (request.url == "/api/random") {
             return response.returnText(this.getImage());
         }
@@ -30,6 +35,10 @@ class Images {
         }
 
         response.return404();
+    }
+
+    getImageList() {
+        return fs.readdirSync(this.imageDir).join("\n");
     }
 
     getImage() {
