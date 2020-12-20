@@ -1,9 +1,8 @@
 const fs = require("fs");
 
 class Images {
-    constructor(saveDir) {
-        //this.imageDir = saveDir + "images/";
-        this.imageDir = "/var/www/images";
+    constructor(config) {
+        this.imageDir = config.webDir + "images/";
     }
 
     handle(request, requestData, response) {

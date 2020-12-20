@@ -1,8 +1,8 @@
 const fs = require("fs");
 
 class Links {
-    constructor(saveDir) {
-        this.linksDir = saveDir + "links/";
+    constructor(config) {
+        this.linksDir = config.saveDir + "links/";
     }
 
     handle(request, requestData, response) {

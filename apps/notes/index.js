@@ -1,8 +1,8 @@
 const fs = require("fs");
 
 class Notes {
-    constructor(saveDir) {
-        this.notesDir = saveDir + "notes/";
+    constructor(config) {
+        this.notesDir = config.saveDir + "notes/";
     }
 
     handle(request, requestData, response) {
