@@ -28,7 +28,7 @@ class Images {
             return response.returnText(this.getImage());
         }
 
-        if (request.url == "api/upload") {
+        if (request.url == "/api/upload") {
             this.saveImage(requestData);
             response.return200();
         }
@@ -45,7 +45,7 @@ class Images {
         let imageFile = imageList[Math.floor(Math.random() * imageList.length)];
         let imageBuffer = fs.readFileSync(this.imageDir + imageFile);
         let imageType = imageFile.slice(-3);
-        return imageType + imageBuffer.toString('base64');
+        return imageType + imageBuffer.toString("base64");
     }
 
     saveImage(requestData) {

@@ -4,8 +4,8 @@ $(document).ready(function() {
 
 function ajaxGetArtists() {
     $.ajax({
-        type: 'GET',
-        url: 'api/list',
+        type: "GET",
+        url: "api/list",
         success: function(artists) {
             displayArtists(artists);
         },
@@ -16,8 +16,8 @@ function ajaxGetArtists() {
 }
 
 function displayArtists(artists) {
-    var artistArray = artists.split('\n');
+    var artistArray = artists.split("\n");
     artistArray.forEach(function(artist) {
-        $('#artists').append('<div>' + artist + '</div>');
+        $("#artists").append("<div>" + artist + "</div>");
     });
 }
