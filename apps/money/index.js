@@ -1,6 +1,13 @@
 const fs = require("fs");
 
 class Money {
+    constructor(config) {
+        this.moneyDir = config.saveDir + "money/";
+
+        let vendorCategoriesJSON = fs.readFileSync(this.moneyDir + "vendor_categories.json");
+        this.vendorCategories = JSON.parse(vendorCategoriesJSON);
+    }
+
     handle(request, requestData, response) {
         console.log(`App money will handle ${request.url}`);
 
@@ -16,6 +23,7 @@ class Money {
 
     parseCSV(requestData) {
         let self = this;
+
         let csv = decodeURIComponent(requestData);
         csv.split(/\r?\n/).forEach(function(line) {
             self.parseCSVLine(line);
@@ -28,6 +36,7 @@ class Money {
         let matches = line.match(transactionRegex);
         if (matches) {
             console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]}`);
+            //forEach
         } else {
             console.log(`Unmatched line: ${line}`);
         }
