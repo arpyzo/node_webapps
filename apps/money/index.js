@@ -2,6 +2,8 @@ const fs = require("fs");
 
 class Money {
     constructor(config) {
+        this.transactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,[^,]+,([^,]+),/;
+
         this.moneyDir = config.saveDir + "money/";
 
         let vendorCategoriesJSON = fs.readFileSync(this.moneyDir + "vendor_categories.json");
@@ -22,21 +24,22 @@ class Money {
     }
 
     parseCSV(requestData) {
-        let self = this;
-
         let csv = decodeURIComponent(requestData);
-        csv.split(/\r?\n/).forEach(function(line) {
-            self.parseCSVLine(line);
-        });
+        for (const line of csv.split(/\r?\n/).slice(1,-1)) {
+            this.parseCSVLine(line);
+        }
     }
 
     parseCSVLine(line) {
-        let transactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,[^,]+,([^,]+),/;
-
-        let matches = line.match(transactionRegex);
+        let matches = line.match(this.transactionRegex);
         if (matches) {
             console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]}`);
-            //forEach
+
+            for (const [vendor, category] of Object.entries(this.vendorCategories)) {
+                if (matches[2].startsWith(vendor)) {
+                    console.log("FOUND: " + category);
+                }
+            }
         } else {
             console.log(`Unmatched line: ${line}`);
         }
