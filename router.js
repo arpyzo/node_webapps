@@ -13,6 +13,14 @@ function route(apps, request, requestData, response) {
             return response.returnJS(fs.readFileSync(__dirname + "/view_libs/jquery.js"));
         }
 
+        if (request.url.startsWith("/js/")) {
+            return response.returnJS(fs.readFileSync(__dirname + "/apps/" + request.app + "/view" + request.url));
+        }
+
+        if (request.url.startsWith("/css/")) {
+            return response.returnCSS(fs.readFileSync(__dirname + "/apps/" + request.app + "/view" + request.url));
+        }
+
         try {
             apps[request.app].handle(request, requestData, response);
         } catch(error) {

@@ -14,13 +14,15 @@ class Money {
         console.log(`App money will handle ${request.url}`);
 
         if (request.url == "/") {
-            response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
-        } else if (request.url == "/api/upload") {
-            this.parseCSV(requestData);
-            response.return200();
-        } else {
-            response.return404();
+            return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
         }
+
+        if (request.url == "/api/upload") {
+            this.parseCSV(requestData);
+            return response.return200();
+        }
+
+        response.return404();
     }
 
     parseCSV(requestData) {

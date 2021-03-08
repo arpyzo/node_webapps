@@ -12,14 +12,6 @@ class Bookmarks {
         //    return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
         //} 
 
-        //if (request.url.startsWith("/js/")) {
-        //    return response.returnJS(fs.readFileSync(__dirname + "/view" + request.url));
-        //} 
-
-        //if (request.url.startsWith("/css/")) {
-        //    return response.returnCSS(fs.readFileSync(__dirname + "/view" + request.url));
-       // }
-        
         if (request.url == "/api/save") {
             try {
                 var bookmarkData = JSON.parse(requestData);
