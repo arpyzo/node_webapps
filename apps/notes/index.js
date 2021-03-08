@@ -8,10 +8,6 @@ class Notes {
     handle(request, requestData, response) {
         console.log(`App notes will handle ${request.url}`);
 
-        if (/^\/[a-z]*$/.test(request.url)) {
-            return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
-        } 
-
         if (request.url == "/api/load") {
             let category = request.queryParams.get("category");
             if (!category) {

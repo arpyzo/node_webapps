@@ -9,6 +9,10 @@ function route(apps, request, requestData, response) {
     }
 
     if (request.app && request.app in apps) {
+        if (/^\/[a-z]*$/.test(request.url)) {
+            return response.returnHTML(fs.readFileSync(__dirname + "/apps/" + request.app + "/view/index.html"));
+        }
+
         if (request.url.endsWith("/jquery.js")) {
             return response.returnJS(fs.readFileSync(__dirname + "/view_libs/jquery.js"));
         }

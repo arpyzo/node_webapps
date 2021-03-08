@@ -8,10 +8,6 @@ class Bookmarks {
     handle(request, requestData, response) {
         console.log(`App links will handle ${request.url}`);
 
-        //if (/^\/[a-z]*$/.test(request.url)) {
-        //    return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
-        //} 
-
         if (request.url == "/api/save") {
             try {
                 var bookmarkData = JSON.parse(requestData);

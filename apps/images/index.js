@@ -8,10 +8,6 @@ class Images {
     handle(request, requestData, response) {
         console.log(`App images will handle ${request.url}`);
 
-        if (/^\/$/.test(request.url)) {
-            return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
-        }
-
         if (request.url == "/api/list") {
             return response.returnText(this.getImageList());
         }

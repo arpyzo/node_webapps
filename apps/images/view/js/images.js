@@ -1,8 +1,13 @@
 // Globals
 var imageList;
+var imageHistory = [];
 
 $(document).ready(function() {
     ajaxList();
+});
+
+$(window).on("popstate", function() {
+    showPreviousImage();
 });
 
 function ajaxList() {
@@ -23,12 +28,22 @@ function ajaxList() {
 
 function setupClickHandler() {
     $(document).click(function() {
-            showRandomImage();
+        showRandomImage();
     });
 }
 
 function showRandomImage() {
     if (imageList) {
-        $("#image").attr("src", imageList[Math.floor(Math.random() * imageList.length)]);
+        if ($("#image").attr("src") != "") {
+            imageHistory.push(newImage);
+            window.history.pushState({}, "", "/images/");
+        }
+
+        newImage = imageList[Math.floor(Math.random() * imageList.length)];
+        $("#image").attr("src", newImage);
     }
+}
+
+function showPreviousImage() {
+    $("#image").attr("src", imageHistory.pop());
 }

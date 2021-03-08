@@ -13,10 +13,6 @@ class Money {
     handle(request, requestData, response) {
         console.log(`App money will handle ${request.url}`);
 
-        if (request.url == "/") {
-            return response.returnHTML(fs.readFileSync(__dirname + "/view/index.html"));
-        }
-
         if (request.url == "/api/upload") {
             this.parseCSV(requestData);
             return response.return200();
