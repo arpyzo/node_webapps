@@ -10,19 +10,15 @@ function route(apps, request, requestData, response) {
 
     if (request.app && request.app in apps) {
         if (/^\/[a-z]*$/.test(request.url)) {
-            return response.returnHTML(fs.readFileSync(__dirname + "/apps/" + request.app + "/view/index.html"));
+            return response.returnAsset("/apps/" + request.app + "/view/index.html");
         }
 
         if (request.url.endsWith("/jquery.js")) {
-            return response.returnJS(fs.readFileSync(__dirname + "/view_libs/jquery.js"));
+            return response.returnAsset("/view_libs/jquery.js");
         }
 
-        if (request.url.startsWith("/js/")) {
-            return response.returnJS(fs.readFileSync(__dirname + "/apps/" + request.app + "/view" + request.url));
-        }
-
-        if (request.url.startsWith("/css/")) {
-            return response.returnCSS(fs.readFileSync(__dirname + "/apps/" + request.app + "/view" + request.url));
+        if (/\.(?:html|css|js)$/.test(request.url)) {
+            return response.returnAsset("/apps/" + request.app + "/view" + request.url);
         }
 
         try {

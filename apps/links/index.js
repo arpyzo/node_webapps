@@ -52,21 +52,21 @@ class Links {
      
         if (request.url == "/api/remove") {
             try {
-                var appendData = JSON.parse(requestData);
+                var removeData = JSON.parse(requestData);
             } catch(error) {
                 return response.return400(error);
             }
 
-            if (!appendData.category || !appendData.link) {
+            if (!removeData.category || !removeData.link) {
                 return response.return400("Missing or empty category and/or link parameter");
             }
 
-            if (!this.doLinksExist(appendData.category)) {
+            if (!this.doLinksExist(removeData.category)) {
                 return response.return404();
             }
 
             try {
-                this.removeLink(appendData.category, appendData.link);
+                this.removeLink(removeData.category, removeData.link);
                 return response.return200();
             } catch(error) {
                 console.trace(`Error removing link: ${error}`);

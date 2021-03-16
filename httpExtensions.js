@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require("fs");
 
 class Request extends http.IncomingMessage {
     app;
@@ -16,20 +17,26 @@ class Request extends http.IncomingMessage {
 }
 
 class Response extends http.ServerResponse {
+    mimeTypes = {
+        "html": "text/html",
+        "js":   "text/javascript",
+        "css":  "text/css",
+    }
+
+    returnAsset(filePath) {
+        filePath = __dirname + filePath;
+
+        if (!fs.existsSync(filePath)) {
+            return this.return404();
+        }
+
+        let mimeType = this.mimeTypes[filePath.split(".").pop()] || "text/plain";
+
+        this.returnContent(200, mimeType, fs.readFileSync(filePath));
+    }
+
     returnText(text) {
         this.returnContent(200, "text/plain", text);
-    }
-
-    returnHTML(html) {
-        this.returnContent(200, "text/html", html);
-    }
-
-    returnJS(js) {
-        this.returnContent(200, "text/javascript", js);
-    }
-
-    returnCSS(css) {
-        this.returnContent(200, "text/css", css);
     }
 
     return200() {
@@ -48,8 +55,8 @@ class Response extends http.ServerResponse {
         this.returnContent(500, "text/plain", `500 Internal server error\n${error}\n`);
     }
 
-    returnContent(code, type, content) {
-        this.writeHead(code, {"Content-Type": type});
+    returnContent(code, mimeType, content) {
+        this.writeHead(code, {"Content-Type": mimeType});
         this.write(content);
         this.end();
     }

@@ -1,3 +1,0 @@
-self/this and arrow functions
-
-logging
