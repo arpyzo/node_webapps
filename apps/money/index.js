@@ -2,7 +2,7 @@ const fs = require("fs");
 
 class Money {
     constructor(config) {
-        this.transactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,[^,]+,([^,]+),/;
+        this.transactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/;
 
         this.moneyDir = config.saveDir + "money/";
 
@@ -38,17 +38,31 @@ class Money {
         }
 
         console.log(transactions);
+        fs.writeFileSync(this.moneyDir + "test_month.json", JSON.stringify(transactions, null, 2));
     }
 
     parseCSVLine(line) {
         let matches = line.match(this.transactionRegex);
         if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]}`);
+            // TODO: grab vendor*transaction with regex
+            // /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,[^,]+,([^,]+),/
+            //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]} - ${matches[4]}`);
+            // 1 - Transaction date
+            // 2 - Vendor*Transaction ID
+            // 3 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
+            // 4 - Amount
 
-            for (const [vendor, category] of Object.entries(this.vendorCategories)) {
+            for (const [vendor, categories] of Object.entries(this.vendorCategories)) {
                 if (matches[2].startsWith(vendor)) {
-                    //console.log(`${vendor} - ${category}`);
-                    return {[vendor]: category};
+                    //console.log(`${vendor} - ${categories}`);
+                    return {
+                        date: matches[1],
+                        transaction: matches[2],
+                        type: matches[3],
+                        vendor: vendor,
+                        categories: categories,
+                        amount: matches[4]
+                    };
                 }
             }
         } else {
