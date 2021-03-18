@@ -9,7 +9,7 @@ function route(apps, request, requestData, response) {
     }
 
     if (request.app && request.app in apps) {
-        if (/^\/[a-z]*$/.test(request.url)) {
+        if (/^\/[a-z0-9]*$/.test(request.url)) {
             return response.returnAsset("/apps/" + request.app + "/view/index.html");
         }
 
