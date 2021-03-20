@@ -13,6 +13,28 @@ class Money {
     handle(request, requestData, response) {
         console.log(`App money will handle ${request.url}`);
 
+        if (/^\/edit/[a-z0-9\-]*$/.test(request.url)) {
+            return response.returnAsset("/apps/" + request.app + "/view/edit.html");
+        }
+
+        if (request.url == "/api/load") {
+            let statement = request.queryParams.get("statement");
+            if (!statement) {
+               return response.return400("Missing statement parameter");
+            }
+
+            if (!this.doNotesExist(statement)) {
+                return response.return404();
+            }
+
+            try {
+                return response.returnText(this.getNotes(statement));
+            } catch(error) {
+                console.trace(`Error loading notes: ${error}`);
+                return response.return500(error);
+            }
+        }
+
         if (request.url == "/api/upload") {
             // TODO: JSON instead
             const csv = decodeURIComponent(requestData);
@@ -44,8 +66,6 @@ class Money {
     parseCSVLine(line) {
         let matches = line.match(this.transactionRegex);
         if (matches) {
-            // TODO: grab vendor*transaction with regex
-            // /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,[^,]+,([^,]+),/
             //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]} - ${matches[4]}`);
             // 1 - Transaction date
             // 2 - Vendor*Transaction ID
@@ -53,8 +73,7 @@ class Money {
             // 4 - Amount
 
             for (const [vendor, categories] of Object.entries(this.vendorCategories)) {
-                if (matches[2].startsWith(vendor)) {
-                    //console.log(`${vendor} - ${categories}`);
+                if (matches[2].toLowerCase().startsWith(vendor.toLowerCase())) {
                     return {
                         date: matches[1],
                         transaction: matches[2],
@@ -70,9 +89,6 @@ class Money {
             return null;
         }
     }
-
-// Transaction Date,Post Date,Description,Category,Type,Amount,Memo
-// 11/29/2020,11/30/2020,Amazon.com*RC4J86PD3,Shopping,Sale,-121.12,
 }
 
 exports.app = Money;
