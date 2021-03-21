@@ -1,3 +1,4 @@
+// Upload
 $(document).ready(function() {
     $("#upload").on("dragover", function(event) {
         event.preventDefault();
@@ -34,3 +35,5 @@ async function ajaxSave(file) {
         }
     });
 }
+
+

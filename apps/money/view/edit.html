@@ -4,29 +4,125 @@
     <meta charset="us-ascii">
 
     <script src="js/jquery.js"></script>
-    <script src="js/notes.js"></script>
+    <script src="js/money.js"></script>
 
-    <link rel="stylesheet" href="css/notes.css">
+    <link rel="stylesheet" href="css/money.css">
 </head>
 
 <body>
-    <a href="linux">Linux</a>
-    <a href="bash">Bash</a>
-    <a href="vim">Vim</a>
-    <a href="macos">MacOS</a>
-    <a href="docker">Docker</a>
-    <a href="aws">AWS</a>
-    <a href="mysql">MySQL</a>
-    <a href="postgres">Postgres</a>
-    <a href="vbox">VirtualBox</a>
-    <a href="python">Python</a>
-    <a href="ruby">Ruby</a>
-    <a href="swift">Swift</a>
-    <a href="sre">SRE</a>
-    <br>
 
-    <div id="save-div"></div>
+<table>
+  <tr>
+    <td>3</td>
+    <td>11/02/2020</td>
+    <td>DOORDASH*TOP POT DOUGH</td>
+    <td>Instacart</td>
+    <td>Sale</td>
+    <td>198.26</td>
+    <td>
+      <select name="category" id="one">
+        <option value="groceries">Groceries</option>
+        <option value="computer" selected>Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+    <td>
+      <select name="category" id="one">
+        <option value="groceries">Groceries</option>
+        <option value="computer" selected>Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+    <td>
+      <select name="category" id="one">
+        <option value="groceries">Groceries</option>
+        <option value="computer" selected>Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+    <td>
+      <select name="category" id="one">
+        <option selected></option>
+        <option value="groceries">Groceries</option>
+        <option value="computer">Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>11/03/2020</td>
+    <td>AMZN*1234</td>
+    <td>Amazon</td>
+    <td>Sale</td>
+    <td>112.30</td>
+    <td colspan=4></td>
+  </tr>
+  <tr>
+    <td colspan=5></td>
+    <td>62.30</td>
+    <td>
+      <select name="category" id="one">
+        <option value="groceries">Groceries</option>
+        <option value="computer" selected>Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan=5></td>
+    <td>50.00</td>
+    <td>
+      <select name="category" id="one">
+        <option value="groceries">Groceries</option>
+        <option value="computer" selected>Computer</option>
+        <option value="household">Household</option>
+        <option value="toys">Toys</option>
+      </select>
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
-    <textarea id="notes" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 </body>
 </html>
+
+<!--
+{
+  "id" "3",
+  "date": "11/29/2020",
+  "transaction": "INSTACART",
+  "type": "Sale",
+  "vendor": "Instacart",
+  "categories": ["Groceries"],
+  "amount": "198.26"
+}
+{
+  "id" "4",
+  "date": "11/29/2020",
+  "transaction": "AMZN",
+  "type": "Sale",
+  "vendor": "Amazon",
+  "categories": ["Mixed"],
+  "amount": "100.00",
+  "parts": [
+  {
+    "amount" "50.00",
+    "categories": ["Computer"]
+  },
+  {
+    "amount" "50.00",
+    "categories": ["Household"]
+  }
+}
+-->
