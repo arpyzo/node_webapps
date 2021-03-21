@@ -1,7 +1,7 @@
 // Globals
 var category;
 
-// Load Notes
+// Load notes
 $(document).ready(function() {
     category = window.location.pathname.split("/")[2];
     if (category) {
@@ -24,7 +24,7 @@ function ajaxLoad(file) {
     });
 }
 
-// Save Links
+// Save notes
 function setupSaveButton() {
     $("#save-div").append('<button id="save" type="button">Save</button>');
 
@@ -48,3 +48,21 @@ function ajaxSave(category, notes) {
         }
     });
 }
+
+// Textarea TAB
+$(document).ready(function() {
+    $("#notes").on('keydown', function(keyEvent) {
+        if (keyEvent.key == "Tab") {
+            keyEvent.preventDefault();
+
+            let start = this.selectionStart;
+            let end = this.selectionEnd;
+
+            let value = $(this).val();
+
+            $(this).val(value.substring(0, start) + "    " + value.substring(end));
+
+            this.selectionStart = this.selectionEnd = start + 4;
+        }
+    });
+});

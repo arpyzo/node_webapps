@@ -1,15 +1,15 @@
 // Upload
 $(document).ready(function() {
-    $("#upload").on("dragover", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
+    $("#upload").on("dragover", function(dragEvent) {
+        dragEvent.preventDefault();
+        dragEvent.stopPropagation();
     });
 
-    $("#upload").on("drop", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
+    $("#upload").on("drop", function(dropEvent) {
+        dropEvent.preventDefault();
+        dropEvent.stopPropagation();
 
-        let files = event.originalEvent.dataTransfer.files;
+        let files = dropEvent.originalEvent.dataTransfer.files;
 
         ([...files]).forEach(function(file) {
             if (file.type != "text/csv") {
