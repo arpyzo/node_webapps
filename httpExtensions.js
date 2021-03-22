@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 
+// Request
 class Request extends http.IncomingMessage {
     app;
     queryParams;
@@ -16,6 +17,9 @@ class Request extends http.IncomingMessage {
     }
 }
 
+exports.Request = Request;
+
+// Response
 class Response extends http.ServerResponse {
     mimeTypes = {
         "html": "text/html",
@@ -24,14 +28,11 @@ class Response extends http.ServerResponse {
     }
 
     returnAsset(filePath) {
-        filePath = __dirname + filePath;
-
         if (!fs.existsSync(filePath)) {
             return this.return404();
         }
 
         let mimeType = this.mimeTypes[filePath.split(".").pop()] || "text/plain";
-
         this.returnContent(200, mimeType, fs.readFileSync(filePath));
     }
 
@@ -39,8 +40,12 @@ class Response extends http.ServerResponse {
         this.returnContent(200, "text/plain", text);
     }
 
+    returnJSON(jsonString) {
+        this.returnContent(200, "application/json", jsonString);
+    }
+
     return200() {
-        this.returnContent(200, "text/plain", `200 Success\n`);
+        this.returnContent(200, "text/plain", "200 Success\n");
     }
 
     return400(error = "") {
@@ -48,7 +53,7 @@ class Response extends http.ServerResponse {
     }
 
     return404() {
-        this.returnContent(404, "text/plain", `404 Not found\n`);
+        this.returnContent(404, "text/plain", "404 Not found\n");
     }
 
     return500(error = "") {
@@ -67,5 +72,4 @@ class Response extends http.ServerResponse {
     }
 }
 
-exports.Request = Request;
 exports.Response = Response;

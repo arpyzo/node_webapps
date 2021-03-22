@@ -8,6 +8,10 @@ class Music {
     handle(request, requestData, response) {
         console.log(`App images will handle ${request.url}`);
 
+        if (request.url == "/") {
+            return response.returnAsset(__dirnname + "/view/index.html");
+        }
+
         if (request.url == "/api/list") {
             return response.returnText(this.getArtistList());
         }

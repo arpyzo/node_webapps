@@ -9,16 +9,12 @@ function route(apps, request, requestData, response) {
     }
 
     if (request.app && request.app in apps) {
-        if (/^\/[a-z0-9]*$/.test(request.url)) {
-            return response.returnAsset("/apps/" + request.app + "/view/index.html");
-        }
-
         if (request.url.endsWith("/jquery.js")) {
-            return response.returnAsset("/view_libs/jquery.js");
+            return response.returnAsset(__dirname + "/view_libs/jquery.js");
         }
 
         if (/\.(?:html|css|js)$/.test(request.url)) {
-            return response.returnAsset("/apps/" + request.app + "/view" + request.url);
+            return response.returnAsset(__dirname + "/apps/" + request.app + "/view" + request.url);
         }
 
         try {

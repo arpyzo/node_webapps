@@ -13,27 +13,29 @@ class Money {
     handle(request, requestData, response) {
         console.log(`App money will handle ${request.url}`);
 
-        if (/^\/edit\/[a-z0-9-]*$/.test(request.url)) {
-            return response.returnAsset("/apps/" + request.app + "/view/edit.html");
+        if (request.url == "/edit") {
+            return response.returnAsset(__dirname + "/view/edit.html");
         }
 
-        //if (request.url == "/api/load") {
-        //    let statement = request.queryParams.get("statement");
-        //    if (!statement) {
-        //       return response.return400("Missing statement parameter");
-        //    }
+        if (request.url == "/api/load") {
+            //let account = request.queryParams.get("account");
+            //let month = request.queryParams.get("month");
+            //if (!account || !month) {
+            //   return response.return400("Missing account and/or month parameter");
+            //}
 
-        //    if (!this.doNotesExist(statement)) {
-        //        return response.return404();
-        //    }
+            //if (!this.doTransactionsExist(account, month)) {
+            //    return response.return404();
+            //}
 
-        //    try {
-        //        return response.returnText(this.getNotes(statement));
-        //    } catch(error) {
-        //        console.trace(`Error loading notes: ${error}`);
-        //        return response.return500(error);
-        //    }
-        //}
+            try {
+                //return response.returnJson(this.getTransactions(account, month));
+                return response.returnJSON(this.getTransactions());
+            } catch(error) {
+                console.trace(`Error loading transactions: ${error}`);
+                return response.return500(error);
+            }
+        }
 
         if (request.url == "/api/upload") {
             // TODO: JSON instead
@@ -44,11 +46,6 @@ class Money {
             } else {
                 return response.return500();
             }
-        }
-
-        if (request.url == "/api/save") {
-            fs.writeFileSync(this.moneyDir + "test", requestData);
-            return response.return200();
         }
 
         response.return404();
@@ -105,6 +102,11 @@ class Money {
             console.log(`ERROR (money): Unmatched line: ${line}`);
             return null;
         }
+    }
+
+    //getTransactions(month) {
+    getTransactions() {
+        return fs.readFileSync(this.moneyDir + "test_month.json");
     }
 }
 

@@ -8,6 +8,10 @@ class Notes {
     handle(request, requestData, response) {
         console.log(`App notes will handle ${request.url}`);
 
+        if (/^\/[a-z0-9]*$/.test(request.url)) {
+            return response.returnAsset(__dirname + "/view/index.html");
+        }
+
         if (request.url == "/api/load") {
             let category = request.queryParams.get("category");
             if (!category) {
