@@ -3,3 +3,13 @@
   height: 200px;
   border: 2px solid;
 }
+
+#test {
+  display: none;
+  grid-template-columns: 50px 50px;
+  grid-gap: 5px;
+}
+
+.box {
+  background-color: #444;
+}

@@ -9,7 +9,7 @@ class Images {
         console.log(`App images will handle ${request.url}`);
 
         if (request.url == "/") {
-            return response.returnAsset(__dirnname + "/view/index.html");
+            return response.returnAsset(__dirname + "/view/index.html");
         }
 
         if (request.url == "/api/list") {
