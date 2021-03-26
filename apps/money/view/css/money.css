@@ -4,12 +4,27 @@
   border: 2px solid;
 }
 
+table {
+  border-collapse: collapse;
+}
+
+td {
+  padding: 5px 10px;
+  border: 1px solid;
+}
+
+.category {
+  min-width: 100px;
+}
+
 #test {
   display: none;
-  grid-template-columns: 50px 50px;
+  grid-template-columns: 150px 150px;
   grid-gap: 5px;
 }
 
 .box {
+  height: 50px;
+  padding: 20px;
   background-color: #444;
 }

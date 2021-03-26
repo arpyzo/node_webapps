@@ -13,6 +13,10 @@ class Money {
     handle(request, requestData, response) {
         console.log(`App money will handle ${request.url}`);
 
+        if (request.url == "/") {
+            return response.returnAsset(__dirname + "/view/index.html");
+        }
+
         if (request.url == "/edit") {
             return response.returnAsset(__dirname + "/view/edit.html");
         }

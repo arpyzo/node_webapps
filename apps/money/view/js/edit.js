@@ -1,15 +1,20 @@
-$(document).click(function(event) {
-   if ($("#test").css("display") == "none") {
-       $("#test").css({"display": "grid", "top": event.pageY, "left": event.pageX, "position": "absolute"});
-       $("#test").show();
-    } else {
-       $("#test").hide();
-    }
-});
-
 $(document).ready(function() {
     ajaxLoad();
 });
+
+function setupOnClick() {
+$(document).click(function(event) {
+    //alert(event.target.className);
+    //alert($(event.target).attr("class"));
+
+    if ($("#test").css("display") == "none") {
+        $("#test").css({"display": "grid", "top": event.pageY - 50, "left": event.pageX - 50, "position": "absolute"});
+        $("#test").show();
+    } else {
+        $("#test").hide();
+    }
+});
+}
 
 // Load transactions
 function ajaxLoad() {
@@ -37,8 +42,12 @@ function makeTransactionsTable(transactions) {
             <td>${transaction.vendor}</td>
             <td>${transaction.type}</td>
             <td>${transaction.amount}</td>
-            <td>${transaction.categories}</td>
+            <td class="category">${transaction.categories}</td>
+            <td class="category"></td>
+            <td class="category"></td>
+            <td class="category"></td>
             </tr>
         `);
     }
+    setupOnClick();
 }
