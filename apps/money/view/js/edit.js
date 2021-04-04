@@ -4,11 +4,27 @@ $(document).ready(function() {
 
 function setupOnClick() {
 $(document).click(function(event) {
-    //alert(event.target.className);
-    //alert($(event.target).attr("class"));
+    if (event.target.className == "row-id") {
+        let rowId = $(event.target).closest("tr").attr("id");
+        // TODO: subrow not specific
+        $(`#${rowId}`).after(`
+            <tr>
+            <td id="sub${rowId}" colspan="6"></td>
+            <td class="category"></td>
+            <td class="category"></td>
+            <td class="category"></td>
+            <td class="category"></td>
+            </tr>
+        `);
+    }
 
-    if ($("#test").css("display") == "none") {
-        $("#test").css({"display": "grid", "top": event.pageY - 50, "left": event.pageX - 50, "position": "absolute"});
+    if ($("#test").css("display") == "none" && event.target.className == "category") {
+        $("#test").css({
+            "display": "grid",
+            "position": "absolute",
+            "top": event.pageY - 50,
+            "left": event.pageX - 50
+        });
         $("#test").show();
     } else {
         $("#test").hide();
@@ -35,8 +51,8 @@ function ajaxLoad() {
 function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
-            <tr>
-            <td>${transaction.id}</td>
+            <tr id="row-${transaction.id}">
+            <td class="row-id">${transaction.id}</td>
             <td>${transaction.date}</td>
             <td>${transaction.description}</td>
             <td>${transaction.vendor}</td>
