@@ -12,10 +12,16 @@ td {
   padding: 5px 10px;
   border: 1px solid;
   height: 20px;
+  text-align: right;
+}
+
+.row-id {
+  text-align: right;
 }
 
 .category {
   min-width: 100px;
+  text-align: right;
 }
 
 #categories {
@@ -24,7 +30,7 @@ td {
   grid-gap: 1px;
 }
 
-.box {
+.category-select {
   display: flex;
   height: 30px;
   background-color: #FFF;

@@ -21,40 +21,44 @@ function ajaxLoad() {
 function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
-            <tr id="row-${transaction.id}">
-            <td class="split">${transaction.id}</td>
-            <td>${transaction.date}</td>
-            <td>${transaction.description}</td>
-            <td>${transaction.vendor}</td>
-            <td>${transaction.type}</td>
-            <td>${transaction.amount}</td>
-            <td class="category">${transaction.categories}</td>
-            <td class="category"></td>
-            <td class="category"></td>
-            <td class="category"></td>
+            <tr id="row-${transaction.id}" class="row-id" data-subrows="0">
+                <td class="split">${transaction.id}</td>
+                <td>${formatDate(transaction.date)}</td>
+                <td>${transaction.description}</td>
+                <td>${transaction.vendor}</td>
+                <td>${transaction.type}</td>
+                <td>${transaction.amount.toFixed(2)}</td>
+                <td id="category-1" class="category">${transaction.categories}</td>
+                <td id="category-2" class="category"></td>
+                <td id="category-3" class="category"></td>
+                <td id="category-4" class="category"></td>
             </tr>
         `);
     }
     setupOnClick();
 }
 
+var selectedCategory = {};
 // TODO: Set up specific onClicks
 function setupOnClick() {
     $(document).click(function(event) {
         if (event.target.className == "split") {
             let rowId = $(event.target).closest("tr").attr("id");
-            // TODO: subrow not specific
+            let subrowNum = $(event.target).closest("tr").data("subrows") + 1;
+
             $(`#${rowId}`).after(`
-                <tr id="sub${rowId}">
-                <td class="delete"></td>
-                <td colspan="4"></td>
-                <td></td>
-                <td class="category"></td>
-                <td class="category"></td>
-                <td class="category"></td>
-                <td class="category"></td>
+                <tr id="subrow${subrowNum}">
+                    <td class="delete"></td>
+                    <td colspan="4"></td>
+                    <td contenteditable="true"></td>
+                    <td id="category-1" class="category"></td>
+                    <td id="category-2" class="category"></td>
+                    <td id="category-3" class="category"></td>
+                    <td id="category-4" class="category"></td>
                 </tr>
             `);
+
+            $(event.target).closest("tr").data("subrows", subrowNum);
         }
 
         if (event.target.className == "delete") {
@@ -63,6 +67,9 @@ function setupOnClick() {
         }
 
         if (event.target.className == "category") {
+            selectedCategory["rowId"] = $(event.target).closest("tr").attr("id");
+            selectedCategory["categoryId"] = $(event.target).attr("id");
+
             $("#categories").css({
                 "display": "grid",
                 "position": "absolute",
@@ -73,5 +80,13 @@ function setupOnClick() {
         } else {
             $("#categories").hide();
         }
+
+        if (event.target.className == "category-select") {
+            $(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`).text($(event.target).text());
+        }
     });
+}
+
+function formatDate(date) {
+  return `${date.slice(4,6)}-${date.slice(6,8)}-${date.slice(0,4)}`;
 }

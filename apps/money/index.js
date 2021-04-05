@@ -57,7 +57,7 @@ class Money {
 
     parseCSV(csv) {
         let transactions = [];
-        for (const line of csv.split(/\r?\n/).slice(1,-1)) {
+        for (const line of csv.split(/\r?\n/).slice(1, -1)) {
             let transaction = this.parseCSVLine(line);
             if (!transaction) {
                 return false;
@@ -68,7 +68,7 @@ class Money {
         transactions.sort(function(a, b) {
             return a["date"] - b["date"];
         });
-        transactions = transactions.map(function(x, i) { x["id"] = i ; return x });
+        transactions = transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
 
         console.log(transactions);
         fs.writeFileSync(this.moneyDir + "test_month.json", JSON.stringify(transactions, null, 2));
