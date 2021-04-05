@@ -3,33 +3,39 @@ $(document).ready(function() {
 });
 
 function setupOnClick() {
-$(document).click(function(event) {
-    if (event.target.className == "row-id") {
-        let rowId = $(event.target).closest("tr").attr("id");
-        // TODO: subrow not specific
-        $(`#${rowId}`).after(`
-            <tr>
-            <td id="sub${rowId}" colspan="6"></td>
-            <td class="category"></td>
-            <td class="category"></td>
-            <td class="category"></td>
-            <td class="category"></td>
-            </tr>
-        `);
-    }
+    $(document).click(function(event) {
+        if (event.target.className == "split") {
+            let rowId = $(event.target).closest("tr").attr("id");
+            // TODO: subrow not specific
+            $(`#${rowId}`).after(`
+                <tr id="sub${rowId}">
+                <td class="delete"></td>
+                <td colspan="5"></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                </tr>
+            `);
+        }
 
-    if ($("#test").css("display") == "none" && event.target.className == "category") {
-        $("#test").css({
-            "display": "grid",
-            "position": "absolute",
-            "top": event.pageY - 50,
-            "left": event.pageX - 50
-        });
-        $("#test").show();
-    } else {
-        $("#test").hide();
-    }
-});
+        if (event.target.className == "delete") {
+            let subrowId = $(event.target).closest("tr").attr("id");
+            $(`#${subrowId}`).remove();
+        }
+
+        if ($("#test").css("display") == "none" && event.target.className == "category") {
+            $("#test").css({
+                "display": "grid",
+                "position": "absolute",
+                "top": event.pageY - 50,
+                "left": event.pageX - 50
+            });
+            $("#test").show();
+        } else {
+            $("#test").hide();
+        }
+    });
 }
 
 // Load transactions
@@ -52,7 +58,7 @@ function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
             <tr id="row-${transaction.id}">
-            <td class="row-id">${transaction.id}</td>
+            <td class="split">${transaction.id}</td>
             <td>${transaction.date}</td>
             <td>${transaction.description}</td>
             <td>${transaction.vendor}</td>
