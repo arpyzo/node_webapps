@@ -2,42 +2,6 @@ $(document).ready(function() {
     ajaxLoad();
 });
 
-function setupOnClick() {
-    $(document).click(function(event) {
-        if (event.target.className == "split") {
-            let rowId = $(event.target).closest("tr").attr("id");
-            // TODO: subrow not specific
-            $(`#${rowId}`).after(`
-                <tr id="sub${rowId}">
-                <td class="delete"></td>
-                <td colspan="5"></td>
-                <td class="category"></td>
-                <td class="category"></td>
-                <td class="category"></td>
-                <td class="category"></td>
-                </tr>
-            `);
-        }
-
-        if (event.target.className == "delete") {
-            let subrowId = $(event.target).closest("tr").attr("id");
-            $(`#${subrowId}`).remove();
-        }
-
-        if ($("#test").css("display") == "none" && event.target.className == "category") {
-            $("#test").css({
-                "display": "grid",
-                "position": "absolute",
-                "top": event.pageY - 50,
-                "left": event.pageX - 50
-            });
-            $("#test").show();
-        } else {
-            $("#test").hide();
-        }
-    });
-}
-
 // Load transactions
 function ajaxLoad() {
     $.ajax({
@@ -72,4 +36,42 @@ function makeTransactionsTable(transactions) {
         `);
     }
     setupOnClick();
+}
+
+// TODO: Set up specific onClicks
+function setupOnClick() {
+    $(document).click(function(event) {
+        if (event.target.className == "split") {
+            let rowId = $(event.target).closest("tr").attr("id");
+            // TODO: subrow not specific
+            $(`#${rowId}`).after(`
+                <tr id="sub${rowId}">
+                <td class="delete"></td>
+                <td colspan="4"></td>
+                <td></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                <td class="category"></td>
+                </tr>
+            `);
+        }
+
+        if (event.target.className == "delete") {
+            let subrowId = $(event.target).closest("tr").attr("id");
+            $(`#${subrowId}`).remove();
+        }
+
+        if (event.target.className == "category") {
+            $("#categories").css({
+                "display": "grid",
+                "position": "absolute",
+                "top": event.pageY - 15,
+                "left": event.pageX - 15
+            });
+            $("#categories").show();
+        } else {
+            $("#categories").hide();
+        }
+    });
 }
