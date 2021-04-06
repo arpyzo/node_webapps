@@ -93,7 +93,7 @@ class Money {
             // 4 - Amount
 
             let transaction = {
-                id: "",
+                id: null,
                 date: matches[1].replace(/\//g, "-"),
                 description: matches[2],
                 vendor: "UNKNOWN",

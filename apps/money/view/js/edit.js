@@ -45,27 +45,41 @@ function makeTransactionsTable(transactions) {
                 <td>${transaction.vendor}</td>
                 <td>${transaction.type}</td>
                 <td>${transaction.amount.toFixed(2)}</td>
-                <td id="category-1" class="category">${transaction.categories}</td>
-                <td id="category-2" class="category"></td>
-                <td id="category-3" class="category"></td>
-                <td id="category-4" class="category"></td>
+                <td id="category-1" class="category">${transaction.categories[0] || ""}</td>
+                <td id="category-2" class="category">${transaction.categories[1] || ""}</td>
+                <td id="category-3" class="category">${transaction.categories[2] || ""}</td>
+                <td id="category-4" class="category">${transaction.categories[3] || ""}</td>
             </tr>
         `);
+
+        if (transaction["parts"]) {
+            for (part of transaction["parts"]) {
+                $("#transactions").append(`
+                    <tr id="subrow-${getNextSubrow()}" class="subrow">
+                        <td class="delete"></td>
+                        <td colspan="4"></td>
+                        <td contenteditable="true">${part.amount.toFixed(2)}</td>
+                        <td id="category-1" class="category">${part.categories[0] || ""}</td>
+                        <td id="category-2" class="category">${part.categories[1] || ""}</td>
+                        <td id="category-3" class="category">${part.categories[2] || ""}</td>
+                        <td id="category-4" class="category">${part.categories[3] || ""}</td>
+                    </tr>
+                `);
+            }
+        }
     }
     setupOnClick();
 }
 
-var subrows = 0;
 var selectedCategory = {};
 // TODO: Set up specific onClicks
 function setupOnClick() {
     $(document).click(function(event) {
         if (event.target.className == "split") {
             let rowId = $(event.target).closest("tr").attr("id");
-            subrows++;
 
             $(`#${rowId}`).after(`
-                <tr id="subrow${subrows}" class="subrow">
+                <tr id="subrow-${getNextSubrow()}" class="subrow">
                     <td class="delete"></td>
                     <td colspan="4"></td>
                     <td contenteditable="true"></td>
@@ -99,7 +113,6 @@ function setupOnClick() {
         }
 
         if (event.target.className == "category-select") {
-            console.log(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`);
             $(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`).text($(event.target).text());
         }
 
@@ -109,13 +122,18 @@ function setupOnClick() {
             $("tr").each(function() {
                 if ($(this).attr("class") == "row") {
                     transactions.push({
-                        id: $("td:nth-child(1)", this).text(),
+                        id: parseInt($("td:nth-child(1)", this).text()),
                         date: $("td:nth-child(2)", this).text(),
                         description: $("td:nth-child(3)", this).text(),
                         vendor: $("td:nth-child(4)", this).text(),
                         type: $("td:nth-child(5)", this).text(),
-                        amount: $("td:nth-child(6)", this).text(),
-                        categories: [],
+                        amount: parseFloat($("td:nth-child(6)", this).text()),
+                        categories: [
+                            $("td:nth-child(7)", this).text(),
+                            $("td:nth-child(8)", this).text(),
+                            $("td:nth-child(9)", this).text(),
+                            $("td:nth-child(10)", this).text()
+                        ].filter(function(s) { return s != ""; }),
                     });
                 }
                 
@@ -123,13 +141,21 @@ function setupOnClick() {
                     transactions[transactions.length - 1]["parts"] ??= [];
 
                     transactions[transactions.length - 1]["parts"].push({
-                       amount: $("td:nth-child(3)", this).text(),
-                       categories: []
+                       amount: parseFloat($("td:nth-child(3)", this).text()),
+                       categories: [
+                            $("td:nth-child(4)", this).text(),
+                            $("td:nth-child(5)", this).text(),
+                            $("td:nth-child(6)", this).text(),
+                            $("td:nth-child(7)", this).text()
+                        ].filter(function(s) { return s != ""; }),
                     });
                 }
             });
-            //console.log(JSON.stringify(transactions, null, 2));
             ajaxSave(transactions);
         }
     });
+}
+
+function getNextSubrow() {
+    return ++($("#transactions").data().subrows);
 }
