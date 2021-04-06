@@ -18,12 +18,29 @@ function ajaxLoad() {
     });
 }
 
+// Save transactions
+function ajaxSave(transactions) {
+    $.ajax({
+        type: 'POST',
+        //url: `api/load?account=${account}&month=${month}`,
+        url: "api/save",
+        timeout: 2000,
+        data: JSON.stringify(transactions),
+        //success: function(transactions) {
+        //    alert("AJAX success!");
+        //},
+        error: function(data, status, error) {
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+        }
+    });
+}
+
 function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
-            <tr id="row-${transaction.id}" class="row-id" data-subrows="0">
+            <tr id="row-${transaction.id}" class="row">
                 <td class="split">${transaction.id}</td>
-                <td>${formatDate(transaction.date)}</td>
+                <td>${transaction.date}</td>
                 <td>${transaction.description}</td>
                 <td>${transaction.vendor}</td>
                 <td>${transaction.type}</td>
@@ -38,16 +55,17 @@ function makeTransactionsTable(transactions) {
     setupOnClick();
 }
 
+var subrows = 0;
 var selectedCategory = {};
 // TODO: Set up specific onClicks
 function setupOnClick() {
     $(document).click(function(event) {
         if (event.target.className == "split") {
             let rowId = $(event.target).closest("tr").attr("id");
-            let subrowNum = $(event.target).closest("tr").data("subrows") + 1;
+            subrows++;
 
             $(`#${rowId}`).after(`
-                <tr id="subrow${subrowNum}">
+                <tr id="subrow${subrows}" class="subrow">
                     <td class="delete"></td>
                     <td colspan="4"></td>
                     <td contenteditable="true"></td>
@@ -58,7 +76,6 @@ function setupOnClick() {
                 </tr>
             `);
 
-            $(event.target).closest("tr").data("subrows", subrowNum);
         }
 
         if (event.target.className == "delete") {
@@ -82,11 +99,37 @@ function setupOnClick() {
         }
 
         if (event.target.className == "category-select") {
+            console.log(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`);
             $(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`).text($(event.target).text());
         }
-    });
-}
 
-function formatDate(date) {
-  return `${date.slice(4,6)}-${date.slice(6,8)}-${date.slice(0,4)}`;
+        if (event.target.id == "save") {
+            let transactions = [];
+
+            $("tr").each(function() {
+                if ($(this).attr("class") == "row") {
+                    transactions.push({
+                        id: $("td:nth-child(1)", this).text(),
+                        date: $("td:nth-child(2)", this).text(),
+                        description: $("td:nth-child(3)", this).text(),
+                        vendor: $("td:nth-child(4)", this).text(),
+                        type: $("td:nth-child(5)", this).text(),
+                        amount: $("td:nth-child(6)", this).text(),
+                        categories: [],
+                    });
+                }
+                
+                if ($(this).attr("class") == "subrow") {
+                    transactions[transactions.length - 1]["parts"] ??= [];
+
+                    transactions[transactions.length - 1]["parts"].push({
+                       amount: $("td:nth-child(3)", this).text(),
+                       categories: []
+                    });
+                }
+            });
+            //console.log(JSON.stringify(transactions, null, 2));
+            ajaxSave(transactions);
+        }
+    });
 }

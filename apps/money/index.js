@@ -2,7 +2,7 @@ const fs = require("fs");
 
 class Money {
     constructor(config) {
-        this.transactionRegex = /^(\d{2})\/(\d{2})\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/;
+        this.transactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/;
 
         this.moneyDir = config.saveDir + "money/";
 
@@ -52,6 +52,12 @@ class Money {
             }
         }
 
+        if (request.url == "/api/save") {
+            // TODO: add month + account
+            this.saveTransactions(requestData);
+            return response.return200();
+        }
+
         response.return404();
     }
 
@@ -66,11 +72,13 @@ class Money {
         }
 
         transactions.sort(function(a, b) {
-            return a["date"] - b["date"];
+            return (
+                (a["date"].slice(6,10) + a["date"].slice(0,2) + a["date"].slice(3,5)) -
+                (b["date"].slice(6,10) + b["date"].slice(0,2) + b["date"].slice(3,5))
+            );
         });
         transactions = transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
 
-        console.log(transactions);
         fs.writeFileSync(this.moneyDir + "test_month.json", JSON.stringify(transactions, null, 2));
         return true;
     }
@@ -78,20 +86,20 @@ class Money {
     parseCSVLine(line) {
         let matches = line.match(this.transactionRegex);
         if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]} - ${matches[6]}`);
-            // 1,2,3 - Transaction date
-            // 4     - Vendor*Transaction ID
-            // 5     - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
-            // 6     - Amount
+            //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]} - ${matches[4]}`);
+            // 1 - Transaction date
+            // 2 - Vendor*Transaction ID
+            // 3 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
+            // 4 - Amount
 
             let transaction = {
                 id: "",
-                date: matches[3] + matches[1] + matches[2],
-                description: matches[4],
-                type: matches[5],
+                date: matches[1].replace(/\//g, "-"),
+                description: matches[2],
                 vendor: "UNKNOWN",
-                categories: [],
-                amount: Math.abs(matches[6])
+                type: matches[3],
+                amount: Math.abs(matches[4]),
+                categories: []
             }
 
             for (const [vendor, categories] of Object.entries(this.vendorCategories)) {
@@ -111,6 +119,12 @@ class Money {
     //getTransactions(month) {
     getTransactions() {
         return fs.readFileSync(this.moneyDir + "test_month.json");
+    }
+
+    saveTransactions(transactionsJson) {
+        let transactions = JSON.parse(transactionsJson);
+        fs.writeFileSync(this.moneyDir + "save_test.json", JSON.stringify(transactions, null, 2));
+        //fs.writeFileSync(this.moneyDir + "save_test.json", transactions);
     }
 }
 
