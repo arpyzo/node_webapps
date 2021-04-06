@@ -118,12 +118,12 @@ class Money {
 
     //getTransactions(month) {
     getTransactions() {
-        return fs.readFileSync(this.moneyDir + "test_month.json");
+        return fs.readFileSync(this.moneyDir + "11_2020_amazon.json");
     }
 
     saveTransactions(transactionsJson) {
         let transactions = JSON.parse(transactionsJson);
-        fs.writeFileSync(this.moneyDir + "save_test.json", JSON.stringify(transactions, null, 2));
+        fs.writeFileSync(this.moneyDir + "11_2020_amazon.json", JSON.stringify(transactions, null, 2));
         //fs.writeFileSync(this.moneyDir + "save_test.json", transactions);
     }
 }

@@ -1,4 +1,22 @@
-#upload {
+#layout {
+    display: flex;
+}
+
+#controls {
+    padding: 20px;
+}
+
+.control {
+    display: block;
+    margin: 20px;
+}
+
+#upload-button {
+  width: 75px;
+  height: 25px;
+}
+
+#upload-box {
   width: 200px;
   height: 200px;
   border: 2px solid;
