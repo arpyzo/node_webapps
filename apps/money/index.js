@@ -22,19 +22,18 @@ class Money {
         }
 
         if (request.url == "/api/load") {
-            //let account = request.queryParams.get("account");
-            //let month = request.queryParams.get("month");
-            //if (!account || !month) {
-            //   return response.return400("Missing account and/or month parameter");
-            //}
+            let month = request.queryParams.get("month");
+            let account = request.queryParams.get("account");
+            if (!month || !account) {
+               return response.return400("Missing month and/or account parameter");
+            }
 
-            //if (!this.doTransactionsExist(account, month)) {
-            //    return response.return404();
-            //}
+            if (!this.doTransactionsExist(month, account)) {
+                return response.return404();
+            }
 
             try {
-                //return response.returnJson(this.getTransactions(account, month));
-                return response.returnJSON(this.getTransactions());
+                return response.returnJSON(this.getTransactions(month, account));
             } catch(error) {
                 console.trace(`Error loading transactions: ${error}`);
                 return response.return500(error);
@@ -115,9 +114,13 @@ class Money {
         }
     }
 
-    //getTransactions(month) {
-    getTransactions() {
-        return fs.readFileSync(this.moneyDir + "11_2020_amazon.json");
+    doTransactionsExist(month, account) {
+        return fs.existsSync(`${this.moneyDir}${month}_${account}.json`);
+    }
+
+    getTransactions(month, account) {
+        //return fs.readFileSync(this.moneyDir + "11_2020_amazon.json");
+        return fs.readFileSync(`${this.moneyDir}${month}_${account}.json`);
     }
 
     saveTransactions(transactionsJson) {

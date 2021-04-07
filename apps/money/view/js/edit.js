@@ -1,13 +1,12 @@
 $(document).ready(function() {
-    ajaxLoad();
+    ajaxLoad("11_2020", "amazon");
 });
 
 // Load transactions
-function ajaxLoad() {
+function ajaxLoad(month, account) {
     $.ajax({
         type: 'GET',
-        //url: `api/load?account=${account}&month=${month}`,
-        url: "api/load",
+        url: `api/load?month=${month}&account=${account}`,
         timeout: 2000,
         success: function(transactions) {
             makeTransactionsTable(transactions);
@@ -69,9 +68,9 @@ function makeTransactionsTable(transactions) {
         }
     }
     setupOnClick();
+    initDOMData();
 }
 
-var selectedCategory = {};
 // TODO: Set up specific onClicks
 function setupOnClick() {
     $(document).click(function(event) {
@@ -98,8 +97,8 @@ function setupOnClick() {
         }
 
         if (event.target.className == "category") {
-            selectedCategory["rowId"] = $(event.target).closest("tr").attr("id");
-            selectedCategory["categoryId"] = $(event.target).attr("id");
+            $("#transactions").data("selectedRow", $(event.target).closest("tr").attr("id"));
+            $("#transactions").data("selectedCategory", $(event.target).attr("id"));
 
             $("#categories").css({
                 "display": "grid",
@@ -113,7 +112,7 @@ function setupOnClick() {
         }
 
         if (event.target.className == "category-select") {
-            $(`#${selectedCategory["rowId"]} #${selectedCategory["categoryId"]}`).text($(event.target).text());
+            $(`#${$("#transactions").data("selectedRow")} #${$("#transactions").data("selectedCategory")}`).text($(event.target).text());
         }
 
         if (event.target.id == "save") {
@@ -158,4 +157,10 @@ function setupOnClick() {
 
 function getNextSubrow() {
     return ++($("#transactions").data().subrows);
+}
+
+function initDOMData() {
+    $("#transactions").data("subrows", 0);
+    $("#transactions").data("selectedRow", "");
+    $("#transactions").data("selectedCategory", "");
 }
