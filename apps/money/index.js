@@ -51,8 +51,8 @@ class Money {
         }
 
         if (request.url == "/api/save") {
-            // TODO: add month + account
-            this.saveTransactions(requestData);
+            let transactionData = JSON.parse(requestData);
+            this.saveTransactions(transactionData);
             return response.return200();
         }
 
@@ -119,14 +119,11 @@ class Money {
     }
 
     getTransactions(month, account) {
-        //return fs.readFileSync(this.moneyDir + "11_2020_amazon.json");
         return fs.readFileSync(`${this.moneyDir}${month}_${account}.json`);
     }
 
-    saveTransactions(transactionsJson) {
-        let transactions = JSON.parse(transactionsJson);
-        fs.writeFileSync(this.moneyDir + "11_2020_amazon.json", JSON.stringify(transactions, null, 2));
-        //fs.writeFileSync(this.moneyDir + "save_test.json", transactions);
+    saveTransactions(transactionData) {
+        fs.writeFileSync(`${this.moneyDir}${transactionData.month}_${transactionData.account}.json`, JSON.stringify(transactionData.transactions, null, 2));
     }
 }
 

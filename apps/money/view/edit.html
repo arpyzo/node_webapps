@@ -5,12 +5,25 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/edit.js"></script>
+    <script src="js/edit-upload.js"></script>
 
     <link rel="stylesheet" href="css/money.css">
 </head>
 
 <body>
-<button id="save" type="button">Save</button>
+<div id="layout">
+    <div id="upload-box"></div>
+
+    <div id="inputs">
+        <input id="month" class="control input" type="text" size="7">
+        <input id="account" class="control input" type="text" size="9">
+    </div>
+
+    <div id="buttons">
+        <button id="load-button" class="control button" type="button">Load</button>
+        <button id="save-button" class="control button" type="button">Save</button>
+    </div>
+</div>
 
 <table id="transactions">
     <tr>

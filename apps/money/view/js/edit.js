@@ -9,7 +9,7 @@ function ajaxLoad(month, account) {
         url: `api/load?month=${month}&account=${account}`,
         timeout: 2000,
         success: function(transactions) {
-            makeTransactionsTable(transactions);
+            makeTransactionsTable(month, account, transactions);
         },
         error: function(data, status, error) {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
@@ -18,13 +18,13 @@ function ajaxLoad(month, account) {
 }
 
 // Save transactions
-function ajaxSave(transactions) {
+function ajaxSave(object) {
     $.ajax({
         type: 'POST',
-        //url: `api/load?account=${account}&month=${month}`,
         url: "api/save",
-        timeout: 2000,
-        data: JSON.stringify(transactions),
+        contentType: "application/json",
+        timeout: 5000,
+        data: JSON.stringify(object),
         //success: function(transactions) {
         //    alert("AJAX success!");
         //},
@@ -34,7 +34,7 @@ function ajaxSave(transactions) {
     });
 }
 
-function makeTransactionsTable(transactions) {
+function makeTransactionsTable(month, account, transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
             <tr id="row-${transaction.id}" class="row">
@@ -68,7 +68,7 @@ function makeTransactionsTable(transactions) {
         }
     }
     setupOnClick();
-    initDOMData();
+    initDOMData(month, account);
 }
 
 // TODO: Set up specific onClicks
@@ -115,7 +115,7 @@ function setupOnClick() {
             $(`#${$("#transactions").data("selectedRow")} #${$("#transactions").data("selectedCategory")}`).text($(event.target).text());
         }
 
-        if (event.target.id == "save") {
+        if (event.target.id == "save-button") {
             let transactions = [];
 
             $("tr").each(function() {
@@ -150,7 +150,11 @@ function setupOnClick() {
                     });
                 }
             });
-            ajaxSave(transactions);
+            ajaxSave({
+                month: $("#transactions").data("month"),
+                account: $("#transactions").data("account"),
+                transactions: transactions
+            });
         }
     });
 }
@@ -159,7 +163,9 @@ function getNextSubrow() {
     return ++($("#transactions").data().subrows);
 }
 
-function initDOMData() {
+function initDOMData(month, account) {
+    $("#transactions").data("month", month);
+    $("#transactions").data("account", account);
     $("#transactions").data("subrows", 0);
     $("#transactions").data("selectedRow", "");
     $("#transactions").data("selectedCategory", "");
