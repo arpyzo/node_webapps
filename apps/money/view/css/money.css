@@ -13,17 +13,14 @@
 
 .input {
   display: block;
-  margin: 18px auto;
+  margin: 17px auto;
+  text-align: center;
 }
 
 .button {
   display: block;
   width: 75px;
   height: 25px;
-}
-
-#month {
-  text-align: center;
 }
 
 #upload-box {

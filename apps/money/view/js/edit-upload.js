@@ -39,9 +39,9 @@ function ajaxUpload(object) {
         contentType: "application/json",
         data: JSON.stringify(object),
         timeout: 5000,
-        //success: function() {
-        //    alert("AJAX success!");
-        //},
+        success: function() {
+            ajaxLoad(object.month, object.account);
+        },
         error: function(data, status, error) {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
         }

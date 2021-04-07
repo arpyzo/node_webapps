@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    ajaxLoad("11_2020", "amazon");
+    setupOnClick();
 });
 
 // Load transactions
@@ -67,13 +67,16 @@ function makeTransactionsTable(month, account, transactions) {
             }
         }
     }
-    setupOnClick();
     initDOMData(month, account);
 }
 
 // TODO: Set up specific onClicks
 function setupOnClick() {
     $(document).click(function(event) {
+        if (event.target.id == "load-button") {
+            ajaxLoad($("#month").val(), $("#account").val());
+        }
+
         if (event.target.className == "split") {
             let rowId = $(event.target).closest("tr").attr("id");
 
