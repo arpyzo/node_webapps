@@ -1,32 +1,46 @@
 // Upload
 $(document).ready(function() {
-    $("#upload").on("dragover", function(dragEvent) {
+    $("#upload-box").on("dragover", function(dragEvent) {
         dragEvent.preventDefault();
         dragEvent.stopPropagation();
     });
 
-    $("#upload").on("drop", function(dropEvent) {
+    $("#upload-box").on("drop", function(dropEvent) {
         dropEvent.preventDefault();
         dropEvent.stopPropagation();
 
-        let files = dropEvent.originalEvent.dataTransfer.files;
+        let file = dropEvent.originalEvent.dataTransfer.files[0];
 
-        ([...files]).forEach(function(file) {
-            if (file.type != "text/csv") {
-                return alert(`File type is ${file.type}\nOnly CSVs accepted`);
-            }
-            ajaxSave(file);
-        });
+        if (file.type != "text/csv") {
+            return alert(`File type is ${file.type}\nOnly CSVs accepted`);
+        }
+
+        let matches = file.name.match(/^(\d\d_20\d\d)_(amazon|freedom|bank)/);
+        if (matches) {
+            uploadTransactions(file, matches[1], matches[2]);
+        } else {
+            alert("Unable to parse filename!");
+        }
     });
 });
 
-async function ajaxSave(file) {
+async function uploadTransactions(file, month, account) {
+    ajaxSave({
+        csv: await file.text(),
+        month: month,
+        account: account
+    });
+}
+
+// Save
+function ajaxSave(object) {
+console.log(object.csv);
     $.ajax({
         type: "POST",
         url: "api/upload",
-        contentType: "plain/text",
-        data: await file.text(),
-        timeout: 2000,
+        contentType: "application/json",
+        data: JSON.stringify(object),
+        timeout: 5000,
         //success: function() {
         //    alert("AJAX success!");
         //},

@@ -42,9 +42,8 @@ class Money {
         }
 
         if (request.url == "/api/upload") {
-            // TODO: JSON instead
-            const csv = decodeURIComponent(requestData);
-            let success = this.parseCSV(csv);
+            let transactionData = JSON.parse(requestData);
+            let success = this.parseTransactionData(transactionData);
             if (success) {
                 return response.return200();
             } else {
@@ -61,9 +60,9 @@ class Money {
         response.return404();
     }
 
-    parseCSV(csv) {
+    parseTransactionData(transactionData) {
         let transactions = [];
-        for (const line of csv.split(/\r?\n/).slice(1, -1)) {
+        for (const line of transactionData.csv.split(/\r?\n/).slice(1, -1)) {
             let transaction = this.parseCSVLine(line);
             if (!transaction) {
                 return false;
@@ -79,7 +78,7 @@ class Money {
         });
         transactions = transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
 
-        fs.writeFileSync(this.moneyDir + "test_month.json", JSON.stringify(transactions, null, 2));
+        fs.writeFileSync(this.moneyDir + transactionData.month + "_" + transactionData.account + ".json", JSON.stringify(transactions, null, 2));
         return true;
     }
 

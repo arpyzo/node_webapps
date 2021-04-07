@@ -1,14 +1,19 @@
 #layout {
-    display: flex;
+  display: flex;
 }
 
 #controls {
-    padding: 20px;
+  width: 150px;
+  text-align: center;
 }
 
 .control {
-    display: block;
-    margin: 20px;
+  display: block;
+  margin: 33px auto;
+}
+
+#month {
+  text-align: center;
 }
 
 #upload-button {
