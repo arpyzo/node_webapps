@@ -9,16 +9,13 @@ class Bookmarks {
         console.log(`App links will handle ${request.url}`);
 
         if (request.url == "/api/save") {
-            try {
-                var bookmarkData = JSON.parse(request.data);
-            } catch(error) {
-                return response.return400(error);
-            }
+            const bookmarkData = request.dataObject;
+            // [{"title":"A title","url":"https://somewhere.com/"}]
 
-            console.log("DEVICE: " + bookmarkData.deviceName)
+            console.log("DEVICE: " + bookmarkData.device)
             console.log("BOOKMARKS: " + bookmarkData.bookmarks)
 
-// [{"title":"A title","url":"https://somewhere.com/"}]
+            response.return200();
         }
 
         response.return404();

@@ -6,6 +6,7 @@ class Request extends http.IncomingMessage {
     app;
     params;
     data = "";
+    dataObject;
 
     parseURL() {
         let url = new URL(this.url, "http://" + this.headers.host);
@@ -15,6 +16,10 @@ class Request extends http.IncomingMessage {
         this.url = match ? match[2] : null;
 
         this.params = url.searchParams;
+    }
+
+    parseJSONData() {
+        dataObject = JSON.parse(data);
     }
 }
 

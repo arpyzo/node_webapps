@@ -22,8 +22,8 @@ class Money {
         }
 
         if (request.url == "/api/load") {
-            let month = request.params.get("month");
-            let account = request.params.get("account");
+            const month = request.params.get("month");
+            const account = request.params.get("account");
             if (!month || !account) {
                return response.return400("Missing month and/or account parameter");
             }
@@ -41,30 +41,51 @@ class Money {
         }
 
         if (request.url == "/api/upload") {
-            let transactionData = JSON.parse(request.data);
-            let success = this.parseTransactionData(transactionData);
-            if (success) {
+            const statementData = JSON.parse(request.data);
+
+            if (!statementData.month || !statementData.account || !statement.csv) {
+                return response.return400("Missing or empty month and/or account and/or csv");
+            }
+
+            const transactions = this.parseStatementData(statement.csv);
+            if (transactions) {
+                try {
+                    this.saveTransactions({
+                        month: statementData.month,
+                        account: statementData.account,
+                        transactions: transactions
+                    });
+                } catch(error) {
+                    console.trace(`Error saving transactions: ${error}`);
+                    return response.return500(error);
+                }
                 return response.return200();
             } else {
-                return response.return500();
+                return response.return400("Failed to parse statement");
             }
         }
 
         if (request.url == "/api/save") {
-            let transactionData = JSON.parse(request.data);
-            this.saveTransactions(transactionData);
+            const transactionData = JSON.parse(request.data);
+
+            try {
+                this.saveTransactions(transactionData);
+            } catch(error) {
+                console.trace(`Error saving transactions: ${error}`);
+                return response.return500(error);
+            }
             return response.return200();
         }
 
         response.return404();
     }
 
-    parseTransactionData(transactionData) {
-        let transactions = [];
-        for (const line of transactionData.csv.split(/\r?\n/).slice(1, -1)) {
-            let transaction = this.parseCSVLine(line);
+    parseStatement(statement) {
+        const transactions = [];
+        for (const line of statement.split(/\r?\n/).slice(1, -1)) {
+            const transaction = this.parseCSVLine(line);
             if (!transaction) {
-                return false;
+                return null;
             }
             transactions.push(transaction);
         }
@@ -75,14 +96,12 @@ class Money {
                 (b["date"].slice(6,10) + b["date"].slice(0,2) + b["date"].slice(3,5))
             );
         });
-        transactions = transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
 
-        fs.writeFileSync(this.moneyDir + transactionData.month + "_" + transactionData.account + ".json", JSON.stringify(transactions, null, 2));
-        return true;
+        return transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
     }
 
     parseCSVLine(line) {
-        let matches = line.match(this.transactionRegex);
+        const matches = line.match(this.transactionRegex);
         if (matches) {
             //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]} - ${matches[4]}`);
             // 1 - Transaction date
@@ -90,7 +109,7 @@ class Money {
             // 3 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
             // 4 - Amount
 
-            let transaction = {
+            const transaction = {
                 id: null,
                 date: matches[1].replace(/\//g, "-"),
                 description: matches[2],

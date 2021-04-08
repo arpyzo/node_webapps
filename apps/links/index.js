@@ -12,13 +12,12 @@ class Links {
             return response.returnAsset(__dirname + "/view/index.html");
         }
 
-        // TODO: replace getLinks with generic
         if (request.url == "/api/list") {
-            return response.returnText(this.getLinks("_list"));
+            return response.returnText(this.getLinksFile("_list"));
         }
 
         if (request.url == "/api/load") {
-            let category = request.params.get("category");
+            const category = request.params.get("category");
             if (!category) {
                return response.return400("Missing category parameter");
             }
@@ -28,7 +27,7 @@ class Links {
             }
 
             try {
-                return response.returnText(this.getLinks(category));
+                return response.returnText(this.getLinksFile(category));
             } catch(error) {
                 console.trace(`Error loading links: ${error}`);
                 return response.return500(error);
@@ -36,11 +35,7 @@ class Links {
         }
 
         if (request.url == "/api/append") {
-            try {
-                var appendData = JSON.parse(request.data);
-            } catch(error) {
-                return response.return400(error);
-            }
+            const appendData = request.dataObject;
 
             if (!appendData.category || !appendData.link) {
                 return response.return400("Missing or empty category and/or link parameter");
@@ -60,11 +55,7 @@ class Links {
         }
      
         if (request.url == "/api/remove") {
-            try {
-                var removeData = JSON.parse(request.data);
-            } catch(error) {
-                return response.return400(error);
-            }
+            const removeData = request.dataObject;
 
             if (!removeData.category || !removeData.link) {
                 return response.return400("Missing or empty category and/or link parameter");
@@ -90,8 +81,8 @@ class Links {
         return fs.existsSync(this.linksDir + category);
     }
 
-    getLinks(category) {
-        return fs.readFileSync(this.linksDir + category);
+    getLinksFile(filename) {
+        return fs.readFileSync(this.linksDir + filename);
     }
 
     appendLink(category, link) {
@@ -99,8 +90,8 @@ class Links {
     }
 
     removeLink(category, link) {
-        let links = fs.readFileSync(this.linksDir + category, 'utf8').split("\n");
-        let newLinks = links.filter(function(line) {
+        const links = fs.readFileSync(this.linksDir + category, 'utf8').split("\n");
+        const newLinks = links.filter(function(line) {
             return line != link;
         });
         fs.writeFileSync(this.linksDir + category, newLinks.join("\n"));
