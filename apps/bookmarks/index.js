@@ -6,8 +6,6 @@ class Bookmarks {
     }
 
     handle(request, response) {
-        console.log(`App links will handle ${request.url}`);
-
         if (request.url == "/api/save") {
             const bookmarkData = request.dataObject;
             // [{"title":"A title","url":"https://somewhere.com/"}]

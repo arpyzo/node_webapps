@@ -19,7 +19,7 @@ class Request extends http.IncomingMessage {
     }
 
     parseJSONData() {
-        dataObject = JSON.parse(data);
+        this.dataObject = JSON.parse(this.data);
     }
 }
 

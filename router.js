@@ -7,7 +7,7 @@ function route(apps, request, response) {
         try {
             request.parseJSONData();
         } catch(error) {
-            return response400(error);
+            return response.return400(error);
         }
     }
    
@@ -20,12 +20,16 @@ function route(apps, request, response) {
         if (request.url.endsWith("/jquery.js")) {
             return response.returnAsset(__dirname + "/view_libs/jquery.js");
         }
+        if (request.url.endsWith("/orbitry.js")) {
+            return response.returnAsset(__dirname + "/view_libs/orbitry.js");
+        }
 
         if (/\.(?:html|css|js)$/.test(request.url)) {
             return response.returnAsset(__dirname + "/apps/" + request.app + "/view" + request.url);
         }
 
         try {
+            console.log(`[${request.app}] ${request.url}`);
             apps[request.app].handle(request, response);
         } catch(error) {
             console.trace(`Uncaught exception from app ${request.app}: ${error}`);

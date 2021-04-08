@@ -6,8 +6,6 @@ class Links {
     }
 
     handle(request, response) {
-        console.log(`App links will handle ${request.url}`);
-
         if (/^\/[a-z0-9]*$/.test(request.url)) {
             return response.returnAsset(__dirname + "/view/index.html");
         }
