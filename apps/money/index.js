@@ -10,7 +10,7 @@ class Money {
         this.vendorCategories = JSON.parse(vendorCategoriesJSON);
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App money will handle ${request.url}`);
 
         if (request.url == "/") {
@@ -22,8 +22,8 @@ class Money {
         }
 
         if (request.url == "/api/load") {
-            let month = request.queryParams.get("month");
-            let account = request.queryParams.get("account");
+            let month = request.params.get("month");
+            let account = request.params.get("account");
             if (!month || !account) {
                return response.return400("Missing month and/or account parameter");
             }
@@ -41,7 +41,7 @@ class Money {
         }
 
         if (request.url == "/api/upload") {
-            let transactionData = JSON.parse(requestData);
+            let transactionData = JSON.parse(request.data);
             let success = this.parseTransactionData(transactionData);
             if (success) {
                 return response.return200();
@@ -51,7 +51,7 @@ class Money {
         }
 
         if (request.url == "/api/save") {
-            let transactionData = JSON.parse(requestData);
+            let transactionData = JSON.parse(request.data);
             this.saveTransactions(transactionData);
             return response.return200();
         }

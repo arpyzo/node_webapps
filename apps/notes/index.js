@@ -5,15 +5,20 @@ class Notes {
         this.notesDir = config.saveDir + "notes/";
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App notes will handle ${request.url}`);
 
         if (/^\/[a-z0-9]*$/.test(request.url)) {
             return response.returnAsset(__dirname + "/view/index.html");
         }
 
+        // TODO: replace getNotes with generic
+        if (request.url == "/api/list") {
+            return response.returnText(this.getNotes("_list"));
+        }
+
         if (request.url == "/api/load") {
-            let category = request.queryParams.get("category");
+            let category = request.params.get("category");
             if (!category) {
                return response.return400("Missing category parameter");
             }
@@ -32,7 +37,7 @@ class Notes {
 
         if (request.url == "/api/save") {
             try {
-                var saveData = JSON.parse(requestData);
+                var saveData = JSON.parse(request.data);
             } catch(error) {
                 return response.return400(error);
             }

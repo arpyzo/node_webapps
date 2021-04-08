@@ -5,7 +5,7 @@ class Images {
         this.imageDir = config.webDir + "images/";
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App images will handle ${request.url}`);
 
         if (request.url == "/") {
@@ -21,7 +21,7 @@ class Images {
         }
 
         if (request.url == "/api/upload") {
-            this.saveImage(requestData);
+            this.saveImage(request.data);
             response.return200();
         }
 
@@ -40,8 +40,8 @@ class Images {
         return imageType + imageBuffer.toString("base64");
     }
 
-    saveImage(requestData) {
-        let fileBuffer = Buffer.from(requestData, "base64");
+    saveImage(imageData) {
+        let fileBuffer = Buffer.from(imageData, "base64");
 
         fs.writeFile("/Users/robert/Desktop/test_image.jpg", fileBuffer, function(error) {
             if (error) {

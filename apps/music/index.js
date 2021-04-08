@@ -5,7 +5,7 @@ class Music {
         this.musicDir = config.webDir + "music/";
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App images will handle ${request.url}`);
 
         if (request.url == "/") {

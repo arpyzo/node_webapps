@@ -3,6 +3,8 @@ var category;
 
 // Load Links
 $(document).ready(function() {
+    ajaxList();
+
     nextLinkId = 1;
 
     category = window.location.pathname.split("/")[2];
@@ -10,6 +12,22 @@ $(document).ready(function() {
         ajaxLoad(category);
     }
 });
+
+function ajaxList() {
+    $.ajax({
+        type: 'GET',
+        url: "api/list",
+        timeout: 5000,
+        success: function(linksList) {
+            for (links of linksList.split("\n").slice(0, -1)) {
+                $("#links-links").append(`<a href="${links.toLowerCase()}">${links}</a>`);
+            }
+        },
+        error: function(data, status, error) {
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+        }
+    });
+}
 
 function ajaxLoad(category) {
     $.ajax({

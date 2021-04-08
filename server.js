@@ -8,12 +8,11 @@ function start(apps, port) {
 
         //console.log(`Received request for ${request.url}`);
 
-        let requestData = "";
         request.addListener("data", function(requestDataChunk) {
-            requestData += requestDataChunk;
+            request.data += requestDataChunk;
         });
         request.addListener("end", function() {
-            router.route(apps, request, requestData, response);
+            router.route(apps, request, response);
         });
     }
 

@@ -3,17 +3,35 @@ var category;
 
 // Load notes
 $(document).ready(function() {
+    ajaxList();
+
     category = window.location.pathname.split("/")[2];
     if (category) {
         ajaxLoad(category);
     }
 });
 
+function ajaxList() {
+    $.ajax({
+        type: 'GET',
+        url: "api/list",
+        timeout: 5000,
+        success: function(notesList) {
+            for (note of notesList.split("\n").slice(0, -1)) {
+                $("#notes-links").append(`<a href="${note.toLowerCase()}">${note}</a>`);
+            }
+        },
+        error: function(data, status, error) {
+            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+        }
+    });
+}
+
 function ajaxLoad(file) {
     $.ajax({
         type: 'GET',
         url: "api/load?category=" + category,
-        timeout: 2000,
+        timeout: 5000,
         success: function(notes) {
             $("#notes").val(notes);
             setupSaveButton();

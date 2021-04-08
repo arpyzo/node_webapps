@@ -5,12 +5,12 @@ class Bookmarks {
         this.linksDir = config.saveDir + "bookmarks/";
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App links will handle ${request.url}`);
 
         if (request.url == "/api/save") {
             try {
-                var bookmarkData = JSON.parse(requestData);
+                var bookmarkData = JSON.parse(request.data);
             } catch(error) {
                 return response.return400(error);
             }

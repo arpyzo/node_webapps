@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-function route(apps, request, requestData, response) {
+function route(apps, request, response) {
     request.parseURL();
    
     // Required for relative link resolution
@@ -18,7 +18,7 @@ function route(apps, request, requestData, response) {
         }
 
         try {
-            apps[request.app].handle(request, requestData, response);
+            apps[request.app].handle(request, response);
         } catch(error) {
             console.trace(`Uncaught exception from app ${request.app}: ${error}`);
             response.return500();

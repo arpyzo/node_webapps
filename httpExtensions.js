@@ -4,7 +4,8 @@ const fs = require("fs");
 // Request
 class Request extends http.IncomingMessage {
     app;
-    queryParams;
+    params;
+    data = "";
 
     parseURL() {
         let url = new URL(this.url, "http://" + this.headers.host);
@@ -13,7 +14,7 @@ class Request extends http.IncomingMessage {
         this.app = match ? match[1] : null;
         this.url = match ? match[2] : null;
 
-        this.queryParams = url.searchParams;
+        this.params = url.searchParams;
     }
 }
 

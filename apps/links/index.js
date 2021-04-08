@@ -5,15 +5,20 @@ class Links {
         this.linksDir = config.saveDir + "links/";
     }
 
-    handle(request, requestData, response) {
+    handle(request, response) {
         console.log(`App links will handle ${request.url}`);
 
         if (/^\/[a-z0-9]*$/.test(request.url)) {
             return response.returnAsset(__dirname + "/view/index.html");
         }
 
+        // TODO: replace getLinks with generic
+        if (request.url == "/api/list") {
+            return response.returnText(this.getLinks("_list"));
+        }
+
         if (request.url == "/api/load") {
-            let category = request.queryParams.get("category");
+            let category = request.params.get("category");
             if (!category) {
                return response.return400("Missing category parameter");
             }
@@ -32,7 +37,7 @@ class Links {
 
         if (request.url == "/api/append") {
             try {
-                var appendData = JSON.parse(requestData);
+                var appendData = JSON.parse(request.data);
             } catch(error) {
                 return response.return400(error);
             }
@@ -56,7 +61,7 @@ class Links {
      
         if (request.url == "/api/remove") {
             try {
-                var removeData = JSON.parse(requestData);
+                var removeData = JSON.parse(request.data);
             } catch(error) {
                 return response.return400(error);
             }
