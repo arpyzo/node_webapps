@@ -4,8 +4,7 @@ var selectedRow = "";
 var selectedCategory = "";
 
 $(document).ready(function() {
-    setupOnClick();
-
+    // Save & Load Buttons
     $("#load-btn").click(function() {
         ajaxGET(`api/load?month=${$("#month").val()}&account=${$("#account").val()}`, makeTransactionsTable);
     });
@@ -16,6 +15,54 @@ $(document).ready(function() {
             account: $("#account").val(),
             transactions: gatherTransactions()
         });
+    });
+
+    // Hide Category Selector
+    $(document).click(function(event) {
+        if (event.target.className != "category") {
+            $("#categories").hide();
+        }
+    });
+
+    // Transaction Split & Delete
+    $("#transactions").on("click", ".split", function() {
+        const rowId = $(event.target).closest("tr").attr("id");
+
+        $(`#${rowId}`).after(`
+            <tr id="subrow-${++nextSubrowId}" class="subrow">
+                <td class="delete"></td>
+                <td colspan="4"></td>
+                <td contenteditable="true"></td>
+                <td id="category-1" class="category"></td>
+                <td id="category-2" class="category"></td>
+                <td id="category-3" class="category"></td>
+                <td id="category-4" class="category"></td>
+            </tr>
+        `);
+    });
+
+    $("#transactions").on("click", ".delete", function() {
+        const subrowId = $(this).closest("tr").attr("id");
+
+        $(`#${subrowId}`).remove();
+    });
+
+    // Category Selector
+    $("#transactions").on("click", ".category", function(event) {
+        selectedRow = $(this).closest("tr").attr("id");
+        selectedCategory = $(this).attr("id");
+
+        $("#categories").css({
+            "display": "grid",
+            "position": "absolute",
+            "top": event.pageY - 15,
+            "left": event.pageX - 15
+        });
+        $("#categories").show();
+    });
+
+    $("#categories").on("click", ".category-select", function() {
+        $(`#${selectedRow} #${selectedCategory}`).text($(this).text());
     });
 });
 
@@ -52,53 +99,6 @@ function makeTransactionsTable(transactions) {
             }
         }
     }
-}
-
-// TODO: Set up specific onClicks
-function setupOnClick() {
-    $(document).click(function(event) {
-
-        if (event.target.className == "split") {
-            let rowId = $(event.target).closest("tr").attr("id");
-
-            $(`#${rowId}`).after(`
-                <tr id="subrow-${++nextSubrowId}" class="subrow">
-                    <td class="delete"></td>
-                    <td colspan="4"></td>
-                    <td contenteditable="true"></td>
-                    <td id="category-1" class="category"></td>
-                    <td id="category-2" class="category"></td>
-                    <td id="category-3" class="category"></td>
-                    <td id="category-4" class="category"></td>
-                </tr>
-            `);
-
-        }
-
-        if (event.target.className == "delete") {
-            let subrowId = $(event.target).closest("tr").attr("id");
-            $(`#${subrowId}`).remove();
-        }
-
-        if (event.target.className == "category") {
-            selectedRow = $(event.target).closest("tr").attr("id");
-            selectedCategory = $(event.target).attr("id");
-
-            $("#categories").css({
-                "display": "grid",
-                "position": "absolute",
-                "top": event.pageY - 15,
-                "left": event.pageX - 15
-            });
-            $("#categories").show();
-        } else {
-            $("#categories").hide();
-        }
-    
-        if (event.target.className == "category-select") {
-            $(`#${selectedRow} #${selectedCategory}`).text($(event.target).text());
-        }
-    });
 }
 
 function gatherTransactions() {
