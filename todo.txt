@@ -12,3 +12,5 @@ ajax
 jquery min
 caching
 zip
+
+js function calling syntax

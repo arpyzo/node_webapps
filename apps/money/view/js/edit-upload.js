@@ -1,11 +1,11 @@
 // Upload
 $(document).ready(function() {
-    $("#upload-box").on("dragover", function(dragEvent) {
+    $("#upload-div").on("dragover", function(dragEvent) {
         dragEvent.preventDefault();
         dragEvent.stopPropagation();
     });
 
-    $("#upload-box").on("drop", function(dropEvent) {
+    $("#upload-div").on("drop", function(dropEvent) {
         dropEvent.preventDefault();
         dropEvent.stopPropagation();
 
@@ -41,6 +41,8 @@ function ajaxUpload(object) {
         timeout: 5000,
         success: function() {
             ajaxLoad(object.month, object.account);
+            $("month").val(object.month);
+            $("account").val(object.account);
         },
         error: function(data, status, error) {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);

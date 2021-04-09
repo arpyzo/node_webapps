@@ -46,11 +46,9 @@ function setupControls() {
 function appendLink(link) {
     $("#new-link").val("");
 
-    $("#links-div").append(`<div id="link-div-${nextLinkId}" class="link-div"></div>`);
+    $("#links-div").append(`<div id="link-div-${++nextLinkId}" class="link-div"></div>`);
     $("#link-div-" + nextLinkId).append(`<button class="remove-btn" type="button">Remove</button>`);
     $("#link-div-" + nextLinkId).append(`<a href="${link}">${link}</a>`);
-
-    nextLinkId++;
 }
 
 function removeLink(linkDivId) {

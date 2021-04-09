@@ -41,11 +41,11 @@ class Money {
         if (request.url == "/api/upload") {
             const statementData = JSON.parse(request.data);
 
-            if (!statementData.month || !statementData.account || !statement.csv) {
+            if (!statementData.month || !statementData.account || !statementData.csv) {
                 return response.return400("Missing or empty month and/or account and/or csv");
             }
 
-            const transactions = this.parseStatementData(statement.csv);
+            const transactions = this.parseStatement(statementData.csv);
             if (transactions) {
                 try {
                     this.saveTransactions({
