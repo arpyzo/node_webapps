@@ -8,35 +8,30 @@ function ajaxGET(url, success) {
     });
 }
 
-function ajaxPOST(url, data, success, parameter) {
-    ajaxJSONRequest('POST', url, data, success, parameter);
+function ajaxPOST(url, data, success) {
+    ajaxJSONRequest('POST', url, data, success);
 }
 
-function ajaxPUT(url, data, success, parameter) {
-    ajaxJSONRequest('PUT', url, data, success, parameter);
+function ajaxPUT(url, data, success) {
+    ajaxJSONRequest('PUT', url, data, success);
 }
 
-function ajaxPATCH(url, data, success, parameter) {
-    ajaxJSONRequest('PATCH', url, data, success, parameter);
+function ajaxPATCH(url, data, success) {
+    ajaxJSONRequest('PATCH', url, data, success);
 }
 
-function ajaxDELETE(url, data, success, parameter) {
-    ajaxJSONRequest('DELETE', url, data, success, parameter);
+function ajaxDELETE(url, data, success) {
+    ajaxJSONRequest('DELETE', url, data, success);
 }
 
-function ajaxJSONRequest(type, url, data, success, parameter) {
-    ajaxObject = {
+function ajaxJSONRequest(type, url, data, success) {
+    ajaxRequest({
         type: type,
         url: url,
         contentType: "application/json",
         data: JSON.stringify(data),
-    };
-
-    if (success) {
-        ajaxObject["success"] = success(parameter);
-    }
-
-    ajaxRequest(ajaxObject);
+        success: success
+    });
 }
 
 function ajaxRequest(request) {

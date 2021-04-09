@@ -6,51 +6,18 @@ var selectedCategory = "";
 $(document).ready(function() {
     setupOnClick();
 
-    $("load-btn").click(function() {
-        //ajaxLoad($("#month").val(), $("#account").val());
+    $("#load-btn").click(function() {
         ajaxGET(`api/load?month=${$("#month").val()}&account=${$("#account").val()}`, makeTransactionsTable);
     });
 
-    $("save-btn").click(function() {
-        ajaxSave({
+    $("#save-btn").click(function() {
+        ajaxPUT("api/save", {
             month: $("#month").val(),
             account: $("#account").val(),
             transactions: gatherTransactions()
         });
     });
 });
-
-// Load transactions
-function ajaxLoad(month, account) {
-    $.ajax({
-        type: 'GET',
-        url: `api/load?month=${month}&account=${account}`,
-        timeout: 2000,
-        success: function(transactions) {
-            makeTransactionsTable(month, account, transactions);
-        },
-        error: function(data, status, error) {
-            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
-        }
-    });
-}
-
-// Save transactions
-function ajaxSave(object) {
-    $.ajax({
-        type: 'POST',
-        url: "api/save",
-        contentType: "application/json",
-        timeout: 5000,
-        data: JSON.stringify(object),
-        //success: function(transactions) {
-        //    alert("AJAX success!");
-        //},
-        error: function(data, status, error) {
-            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
-        }
-    });
-}
 
 function makeTransactionsTable(transactions) {
     for (transaction of transactions) {

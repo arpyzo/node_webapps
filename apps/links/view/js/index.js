@@ -32,13 +32,13 @@ function setupControls() {
 
     $("#add-btn").click(function() {
         const link = $("#new-link").val();
-        ajaxPATCH("api/append", {category: category, link: link}, appendLink, link);
+        ajaxPATCH("api/append", {category: category, link: link}, function() { appendLink(link); });
     });
 
     $("#links-div").on("click", ".remove-btn", function() {
         const linkDivId = $(this).closest("div").attr("id");
         const link = $(`#${linkDivId} a`).attr("href");
-        ajaxDELETE("api/remove", { category: category, link: link }, removeLink, linkDivId);
+        ajaxDELETE("api/remove", { category: category, link: link }, function() { removeLink(linkDivId); });
     });
 }
 
