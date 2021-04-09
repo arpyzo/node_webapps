@@ -15,7 +15,7 @@ class Images {
         }
 
         if (request.url == "/api/random") {
-            return response.returnText(this.getImage());
+            return response.returnText(this.getRandomImage());
         }
 
         if (request.url == "/api/upload") {
@@ -30,16 +30,16 @@ class Images {
         return fs.readdirSync(this.imageDir).join("\n");
     }
 
-    getImage() {
-        let imageList = fs.readdirSync(this.imageDir);
-        let imageFile = imageList[Math.floor(Math.random() * imageList.length)];
-        let imageBuffer = fs.readFileSync(this.imageDir + imageFile);
-        let imageType = imageFile.slice(-3);
+    getRandomImage() {
+        const imageList = fs.readdirSync(this.imageDir);
+        const imageFile = imageList[Math.floor(Math.random() * imageList.length)];
+        const imageBuffer = fs.readFileSync(this.imageDir + imageFile);
+        const imageType = imageFile.slice(-3);
         return imageType + imageBuffer.toString("base64");
     }
 
     saveImage(imageData) {
-        let fileBuffer = Buffer.from(imageData, "base64");
+        const fileBuffer = Buffer.from(imageData, "base64");
 
         fs.writeFile("/Users/robert/Desktop/test_image.jpg", fileBuffer, function(error) {
             if (error) {

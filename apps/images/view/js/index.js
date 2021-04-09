@@ -3,14 +3,15 @@ var imageList;
 var imageHistory = [];
 
 $(document).ready(function() {
-    ajaxList();
+    //ajaxList();
+    ajaxGET("api/list", setupImageCycling);
 });
 
 $(window).on("popstate", function() {
     showPreviousImage();
 });
 
-function ajaxList() {
+/*function ajaxList() {
     $.ajax({
         type: "GET",
         url: "api/list",
@@ -24,24 +25,30 @@ function ajaxList() {
             alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
         }
     });
-}
+}*/
 
-function setupClickHandler() {
+function setupImageCycling(imageData) {
+    imageList = imageData.split("\n");
+
+    showRandomImage();
+
     $(document).click(function() {
         showRandomImage();
     });
 }
 
 function showRandomImage() {
-    if (imageList) {
-        if ($("#image").attr("src") != "") {
-            imageHistory.push(newImage);
-            window.history.pushState({}, "", "/images/");
-        }
-
-        newImage = imageList[Math.floor(Math.random() * imageList.length)];
-        $("#image").attr("src", newImage);
+    if (!imageList) {
+        return;
     }
+
+    if ($("#image").attr("src")) {
+        imageHistory.push($("#image").attr("src"));
+        window.history.pushState({}, "", "/images/");
+    }
+
+    newImage = imageList[Math.floor(Math.random() * imageList.length)];
+    $("#image").attr("src", newImage);
 }
 
 function showPreviousImage() {
