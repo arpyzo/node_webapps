@@ -2,7 +2,13 @@ console.trace
 
 const
 
-console.log(`ERROR (money):
+console.log(`ERROR [money]:
 
-saveStuff(data) || return response.return500();
-return response.return200();
+ajax
+- multiple parameters
+- multiple callbacks
+- JSON response data
+
+jquery min
+caching
+zip

@@ -25,13 +25,18 @@ function ajaxDELETE(url, data, success, parameter) {
 }
 
 function ajaxJSONRequest(type, url, data, success, parameter) {
-    ajaxRequest({
+    ajaxObject = {
         type: type,
         url: url,
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: success(parameter)
-    });
+    };
+
+    if (success) {
+        ajaxObject["success"] = success(parameter);
+    }
+
+    ajaxRequest(ajaxObject);
 }
 
 function ajaxRequest(request) {

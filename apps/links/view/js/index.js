@@ -2,53 +2,52 @@
 var category;
 var nextLinkId = 1;
 
+// Setup
 $(document).ready(function() {
-    ajaxGET("api/list", showNavLinks);
+    ajaxGET("api/list", setupNav);
 
     category = window.location.pathname.split("/")[2];
     if (category) {
-        ajaxGET("api/load?category=" + category, showMainLinks);
+        ajaxGET("api/load?category=" + category, appendLinks);
     }
 });
 
-function showNavLinks(links) {
-    for (link of links.split("\n").slice(0, -1)) {
-        $("#links-nav").append(`<a class="nav-link" href="${link.toLowerCase()}">${link}</a>`);
+function setupNav(navLinks) {
+    for (link of navLinks.split("\n").slice(0, -1)) {
+        $("#nav-div").append(`<a class="nav-link" href="${link.toLowerCase()}">${link}</a>`);
     }
 }
 
-function showMainLinks(links) {
-    let linkArray = links.split("\n");
-    for (let i = 0; i < linkArray.length; i++) {
-        if (linkArray[i]) {
-            appendLink(linkArray[i]);
-        }
+function appendLinks(links) {
+    for (link of links.split("\n").slice(0, -1)) {
+        appendLink(link);
     }
 
     setupControls();
 }
 
 function setupControls() {
-    $("#links-add").append('<button id="add" class="button" type="button">Add</button>');
-    $("#links-add").append('<input id="new-link" type="text" size="100">');
+    $("#add-div").append('<button id="add-btn" type="button">Add</button>');
+    $("#add-div").append('<input id="new-link" type="text" size="100">');
 
-    $("#add").click(function() {
-        let link = $("#new-link").val();
+    $("#add-btn").click(function() {
+        const link = $("#new-link").val();
         ajaxPATCH("api/append", {category: category, link: link}, appendLink, link);
     });
 
-    $("#links").on("click", ".remove", function() {
-        linkDivId = $(this).closest("div").attr("id");
-        link = $(`#${linkDivId} a`).attr("href");
+    $("#links-div").on("click", ".remove-btn", function() {
+        const linkDivId = $(this).closest("div").attr("id");
+        const link = $(`#${linkDivId} a`).attr("href");
         ajaxDELETE("api/remove", { category: category, link: link }, removeLink, linkDivId);
     });
 }
 
+// Link Handling
 function appendLink(link) {
     $("#new-link").val("");
 
-    $("#links").append(`<div id="link-div-${nextLinkId}" class="link-div"></div>`);
-    $("#link-div-" + nextLinkId).append(`<button class="remove button" type="button">Remove</button>`);
+    $("#links-div").append(`<div id="link-div-${nextLinkId}" class="link-div"></div>`);
+    $("#link-div-" + nextLinkId).append(`<button class="remove-btn" type="button">Remove</button>`);
     $("#link-div-" + nextLinkId).append(`<a href="${link}">${link}</a>`);
 
     nextLinkId++;
