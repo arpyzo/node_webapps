@@ -6,8 +6,8 @@ class Money {
 
         this.moneyDir = config.saveDir + "money/";
 
-        let vendorCategoriesJSON = fs.readFileSync(this.moneyDir + "vendor_categories.json");
-        this.vendorCategories = JSON.parse(vendorCategoriesJSON);
+        let classificationJSON = fs.readFileSync(this.moneyDir + "classification.json");
+        this.classification = JSON.parse(classificationJSON);
     }
 
     handle(request, response) {
@@ -111,17 +111,20 @@ class Money {
                 id: null,
                 date: matches[1].replace(/\//g, "-"),
                 description: matches[2],
-                vendor: "UNKNOWN",
                 type: matches[3],
                 amount: Math.abs(matches[4]),
+                essential: false,
                 categories: []
             }
 
-            for (const [vendor, categories] of Object.entries(this.vendorCategories)) {
-                if (transaction["description"].toLowerCase().startsWith(vendor.toLowerCase())) {
-                    transaction["vendor"] = vendor;
+            for (const [vendor, categories] of Object.entries(this.classification["Vendors"])) {
+                if (transaction["description"].toLowerCase().startsWith(vendor.toLowerCase()) ||
+                    transaction["description"].toLowerCase().endsWith(vendor.toLowerCase())) {
+
+                    transaction["essential"] = this.classification["Essential"].includes(categories[0]);
                     transaction["categories"] = categories;
-                    return transaction;
+
+                    break;
                 }
             }
             return transaction;

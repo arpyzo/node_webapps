@@ -6,6 +6,8 @@ class Request extends http.IncomingMessage {
     app;
     params;
     data = "";
+    buf;
+    bufs = [];
     dataObject;
 
     parseURL() {
