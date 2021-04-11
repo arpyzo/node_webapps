@@ -30,7 +30,7 @@ $(document).ready(function() {
         $(`#${rowId}`).after(`
             <tr id="subrow-${++nextSubrowId}" class="subrow">
                 <td class="delete"></td>
-                <td colspan="4"></td>
+                <td colspan="3"></td>
                 <td contenteditable="true"></td>
                 <td class="essential"></td>
                 <td class="category"></td>
@@ -100,7 +100,7 @@ function makeTransactionsTable(transactions) {
                 $("#transactions").append(`
                     <tr id="subrow-${++nextSubrowId}" class="subrow">
                         <td class="delete"></td>
-                        <td colspan="4"></td>
+                        <td colspan="3"></td>
                         <td contenteditable="true">${part.amount.toFixed(2)}</td>
                         <td class="essential">${part.essential}</td>
                         <td class="category">${part.category}</td>
@@ -121,7 +121,7 @@ function gatherTransactions() {
                 date: $("td:nth-child(2)", this).text(),
                 description: $("td:nth-child(3)", this).text(),
                 type: $("td:nth-child(4)", this).text(),
-                amount: parseFloat($("td:nth-child(5)", this).text()),
+                amount: parseFloat($("td:nth-child(5)", this).text() || 0),
                 essential: ($("td:nth-child(6)", this).text() == "true"),
                 category: $("td:nth-child(7)", this).text()
             });
@@ -131,7 +131,7 @@ function gatherTransactions() {
             transactions[transactions.length - 1]["parts"] ??= [];
 
             transactions[transactions.length - 1]["parts"].push({
-                amount: parseFloat($("td:nth-child(3)", this).text()),
+                amount: parseFloat($("td:nth-child(3)", this).text() || 0),
                 essential: ($("td:nth-child(4)", this).text() == "true"),
                 category: $("td:nth-child(5)", this).text()
             });
