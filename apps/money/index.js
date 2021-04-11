@@ -114,15 +114,15 @@ class Money {
                 type: matches[3],
                 amount: Math.abs(matches[4]),
                 essential: false,
-                categories: []
+                category: []
             }
 
-            for (const [vendor, categories] of Object.entries(this.classification["Vendors"])) {
+            for (const [vendor, category] of Object.entries(this.classification["Vendors"])) {
                 if (transaction["description"].toLowerCase().startsWith(vendor.toLowerCase()) ||
                     transaction["description"].toLowerCase().endsWith(vendor.toLowerCase())) {
 
-                    transaction["essential"] = this.classification["Essential"].includes(categories[0]);
-                    transaction["categories"] = categories;
+                    transaction["essential"] = this.classification["Essential"].includes(category);
+                    transaction["category"] = category;
 
                     break;
                 }

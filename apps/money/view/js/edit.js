@@ -1,7 +1,6 @@
 // Globals
 var nextSubrowId = 0;
 var selectedRow = "";
-var selectedCategory = "";
 
 $(document).ready(function() {
     // Save & Load Buttons
@@ -34,10 +33,7 @@ $(document).ready(function() {
                 <td colspan="4"></td>
                 <td contenteditable="true"></td>
                 <td class="essential"></td>
-                <td id="category-1" class="category"></td>
-                <td id="category-2" class="category"></td>
-                <td id="category-3" class="category"></td>
-                <td id="category-4" class="category"></td>
+                <td class="category"></td>
             </tr>
         `);
     });
@@ -56,7 +52,6 @@ $(document).ready(function() {
     // Category Selector
     $("#transactions").on("click", ".category", function(event) {
         selectedRow = $(this).closest("tr").attr("id");
-        selectedCategory = $(this).attr("id");
 
         $("#categories").css({
             "display": "grid",
@@ -68,7 +63,7 @@ $(document).ready(function() {
     });
 
     $("#categories").on("click", ".category-select", function() {
-        $(`#${selectedRow} #${selectedCategory}`).text($(this).text());
+        $(`#${selectedRow} .category`).text($(this).text());
     });
 });
 
@@ -83,8 +78,7 @@ function makeTransactionsTable(transactions) {
             <th>type</th>
             <th>amount</th>
             <th>essential</th>
-            <th>categories</th>
-            <th colspan="3"></th>
+            <th>category</th>
         </tr>
     `);
 
@@ -97,10 +91,7 @@ function makeTransactionsTable(transactions) {
                 <td>${transaction.type}</td>
                 <td>${transaction.amount.toFixed(2)}</td>
                 <td class="essential">${transaction.essential}</td>
-                <td id="category-1" class="category">${transaction.categories[0] || ""}</td>
-                <td id="category-2" class="category">${transaction.categories[1] || ""}</td>
-                <td id="category-3" class="category">${transaction.categories[2] || ""}</td>
-                <td id="category-4" class="category">${transaction.categories[3] || ""}</td>
+                <td class="category">${transaction.category}</td>
             </tr>
         `);
 
@@ -112,10 +103,7 @@ function makeTransactionsTable(transactions) {
                         <td colspan="4"></td>
                         <td contenteditable="true">${part.amount.toFixed(2)}</td>
                         <td class="essential">${part.essential}</td>
-                        <td id="category-1" class="category">${part.categories[0] || ""}</td>
-                        <td id="category-2" class="category">${part.categories[1] || ""}</td>
-                        <td id="category-3" class="category">${part.categories[2] || ""}</td>
-                        <td id="category-4" class="category">${part.categories[3] || ""}</td>
+                        <td class="category">${part.category}</td>
                     </tr>
                 `);
             }
@@ -135,12 +123,7 @@ function gatherTransactions() {
                 type: $("td:nth-child(4)", this).text(),
                 amount: parseFloat($("td:nth-child(5)", this).text()),
                 essential: ($("td:nth-child(6)", this).text() == "true"),
-                categories: [
-                    $("td:nth-child(7)", this).text(),
-                    $("td:nth-child(8)", this).text(),
-                    $("td:nth-child(9)", this).text(),
-                    $("td:nth-child(10)", this).text()
-                ].filter(function(s) { return s != ""; }),
+                category: $("td:nth-child(7)", this).text()
             });
         }
         
@@ -150,12 +133,7 @@ function gatherTransactions() {
             transactions[transactions.length - 1]["parts"].push({
                 amount: parseFloat($("td:nth-child(3)", this).text()),
                 essential: ($("td:nth-child(4)", this).text() == "true"),
-                categories: [
-                    $("td:nth-child(5)", this).text(),
-                    $("td:nth-child(6)", this).text(),
-                    $("td:nth-child(7)", this).text(),
-                    $("td:nth-child(8)", this).text()
-                ].filter(function(s) { return s != ""; }),
+                category: $("td:nth-child(5)", this).text()
             });
          }
     });
