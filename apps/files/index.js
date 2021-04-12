@@ -14,13 +14,13 @@ class Files {
             return response.returnText(this.getFileList());
         }
 
-        if (request.url == "/api/upload64") {
+        /*if (request.url == "/api/upload64") {
             this.saveFile64(request.data);
             return response.return200();
-        }
+        }*/
 
         if (request.url == "/api/upload") {
-            this.saveFile(request.buf);
+            this.saveFile(request.data);
             return response.return200();
         }
 
@@ -43,8 +43,6 @@ class Files {
     }
 
     saveFile(fileData) {
-        //const fileBuffer = Buffer.from(fileData, "base64");
-
         console.log(`TYPE: ${typeof fileData} SIZE: ${fileData.length}`);
 
         fs.writeFile(this.fileDir + "test_file", fileData, function(error) {

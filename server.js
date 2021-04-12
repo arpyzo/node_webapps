@@ -4,20 +4,15 @@ const router = require("./router");
 
 function start(apps, port) {
     function onRequest(request, response) {
-        request.setEncoding("utf8");
+        let dataBuffers = [];
 
         //console.log(`Received request for ${request.url}`);
 
         request.addListener("data", function(requestDataChunk) {
-            //console.log(`CTYPE: ${typeof requestDataChunk}`);
-            //console.log(`SIZE: ${requestDataChunk.length}`);
-            //console.log(`${requestDataChunk.toString('hex')}`);
-            //console.log(Buffer.isBuffer(requestDataChunk));
-            request.data += requestDataChunk;
-            //request.bufs.push(requestDataChunk);
+            dataBuffers.push(requestDataChunk);
         });
         request.addListener("end", function() {
-            //request.buf = Buffer.concat(request.bufs);
+            request.data = Buffer.concat(dataBuffers);
             router.route(apps, request, response);
         });
     }

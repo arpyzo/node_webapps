@@ -40,7 +40,7 @@ class Money {
         }
 
         if (request.url == "/api/upload") {
-            const statementData = JSON.parse(request.data);
+            const statementData = request.dataObject;
 
             if (!statementData.month || !statementData.account || !statementData.csv) {
                 return response.return400("Missing or empty month and/or account and/or csv");
@@ -65,7 +65,7 @@ class Money {
         }
 
         if (request.url == "/api/save") {
-            const transactionData = JSON.parse(request.data);
+            const transactionData = request.dataObject;
 
             try {
                 this.saveTransactions(transactionData);

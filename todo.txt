@@ -4,13 +4,8 @@ const
 
 console.log(`ERROR [money]:
 
-ajax
-- multiple parameters
-- multiple callbacks
-- JSON response data
-
-jquery min
 caching
-zip
 
 js function calling syntax
+
+write request data directly to file

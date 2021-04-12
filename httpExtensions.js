@@ -5,9 +5,7 @@ const fs = require("fs");
 class Request extends http.IncomingMessage {
     app;
     params;
-    data = "";
-    buf;
-    bufs = [];
+    data;
     dataObject;
 
     parseURL() {
@@ -21,7 +19,7 @@ class Request extends http.IncomingMessage {
     }
 
     parseJSONData() {
-        this.dataObject = JSON.parse(this.data);
+        this.dataObject = JSON.parse(this.data.toString("utf8"));
     }
 }
 
