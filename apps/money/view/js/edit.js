@@ -31,8 +31,8 @@ $(document).ready(function() {
             <tr id="subrow-${++nextSubrowId}" class="subrow">
                 <td class="delete"></td>
                 <td colspan="3"></td>
-                <td contenteditable="true"></td>
-                <td class="essential"></td>
+                <td class="amount" contenteditable="true">0.00</td>
+                <td class="essential">false</td>
                 <td class="category"></td>
             </tr>
         `);
@@ -85,11 +85,11 @@ function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
             <tr id="row-${transaction.id}" class="row">
-                <td class="split">${transaction.id}</td>
-                <td>${transaction.date}</td>
-                <td>${transaction.description}</td>
-                <td>${transaction.type}</td>
-                <td>${transaction.amount.toFixed(2)}</td>
+                <td class="split id">${transaction.id}</td>
+                <td class="date">${transaction.date}</td>
+                <td class="description">${transaction.description}</td>
+                <td class="type">${transaction.type}</td>
+                <td class="amount">${transaction.amount.toFixed(2)}</td>
                 <td class="essential">${transaction.essential}</td>
                 <td class="category">${transaction.category}</td>
             </tr>
@@ -101,7 +101,7 @@ function makeTransactionsTable(transactions) {
                     <tr id="subrow-${++nextSubrowId}" class="subrow">
                         <td class="delete"></td>
                         <td colspan="3"></td>
-                        <td contenteditable="true">${part.amount.toFixed(2)}</td>
+                        <td class="amount" contenteditable="true">${part.amount.toFixed(2)}</td>
                         <td class="essential">${part.essential}</td>
                         <td class="category">${part.category}</td>
                     </tr>
@@ -117,13 +117,13 @@ function gatherTransactions() {
     $("tr").each(function() {
         if ($(this).attr("class") == "row") {
             transactions.push({
-                id: parseInt($("td:nth-child(1)", this).text()),
-                date: $("td:nth-child(2)", this).text(),
-                description: $("td:nth-child(3)", this).text(),
-                type: $("td:nth-child(4)", this).text(),
-                amount: parseFloat($("td:nth-child(5)", this).text() || 0),
-                essential: ($("td:nth-child(6)", this).text() == "true"),
-                category: $("td:nth-child(7)", this).text()
+                id: parseInt($(".id", this).text()),
+                date: $(".date", this).text(),
+                description: $(".description", this).text(),
+                type: $(".type", this).text(),
+                amount: parseFloat($(".amount", this).text() || 0),
+                essential: ($(".essential", this).text() == "true"),
+                category: $(".category", this).text()
             });
         }
         
@@ -131,9 +131,9 @@ function gatherTransactions() {
             transactions[transactions.length - 1]["parts"] ??= [];
 
             transactions[transactions.length - 1]["parts"].push({
-                amount: parseFloat($("td:nth-child(3)", this).text() || 0),
-                essential: ($("td:nth-child(4)", this).text() == "true"),
-                category: $("td:nth-child(5)", this).text()
+                amount: parseFloat($(".amount", this).text() || 0),
+                essential: ($(".essential", this).text() == "true"),
+                category: $(".category", this).text()
             });
          }
     });
