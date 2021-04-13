@@ -14,15 +14,15 @@ class Files {
             return response.returnText(this.getFileList());
         }
 
+        if (request.url == "/api/upload") {
+            this.saveFile(request.headers["x-filename"], request.data);
+            return response.return200();
+        }
+
         /*if (request.url == "/api/upload64") {
             this.saveFile64(request.data);
             return response.return200();
         }*/
-
-        if (request.url == "/api/upload") {
-            this.saveFile(request.data);
-            return response.return200();
-        }
 
         response.return404();
     }
@@ -31,7 +31,13 @@ class Files {
         return fs.readdirSync(this.fileDir).join("\n");
     }
 
-    saveFile64(fileData) {
+    saveFile(filename, fileData) {
+        //console.log(`TYPE: ${typeof fileData} SIZE: ${fileData.length}`);
+        console.log(`FILE: ${filename}`);
+        fs.writeFileSync(this.fileDir + "test_file", fileData);
+    }
+
+    /*saveFile64(fileData) {
         const fileBuffer = Buffer.from(fileData, "base64");
 
         fs.writeFile(this.fileDir + "test_file", fileBuffer, function(error) {
@@ -40,18 +46,8 @@ class Files {
             }
             console.log("File saved");
         });
-    }
+    }*/
 
-    saveFile(fileData) {
-        console.log(`TYPE: ${typeof fileData} SIZE: ${fileData.length}`);
-
-        fs.writeFile(this.fileDir + "test_file", fileData, function(error) {
-            if (error) {
-                return console.log(error);
-            }
-            console.log("File saved");
-        });
-    }
 }
 
 exports.app = Files;

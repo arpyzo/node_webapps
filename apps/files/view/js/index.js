@@ -1,56 +1,43 @@
-// Globals
-var imageList;
-var imageHistory = [];
-
 $(document).ready(function() {
-    //ajaxList();
-    ajaxGET("api/list", setupImageCycling);
+    $("#upload-div").on("dragover", function(dragEvent) {
+        dragEvent.preventDefault();
+        dragEvent.stopPropagation();
+    });
+
+    $("#upload-div").on("drop", function(dropEvent) {
+        dropEvent.preventDefault();
+        dropEvent.stopPropagation();
+
+        const file = dropEvent.originalEvent.dataTransfer.files[0];
+
+        //alert(file.size);
+
+        uploadFile(file);
+    });
 });
 
-$(window).on("popstate", function() {
-    showPreviousImage();
-});
+async function uploadFile(file) {
+    ajaxRequest({
+        xhr: function() {
+            var xhr = new window.XMLHttpRequest();
 
-/*function ajaxList() {
-    $.ajax({
-        type: "GET",
-        url: "api/list",
-        timeout: 2000,
-        success: function(imageData) {
-            imageList = imageData.split("\n");
-            showRandomImage();
-            setupClickHandler();
+            xhr.upload.addEventListener("progress", function(progressEvent) {
+                if (progressEvent.lengthComputable) {
+                    var completed = progressEvent.loaded / progressEvent.total;
+                    $("#upload-div").text(`${(completed * 100).toFixed(2)}%`);
+                }
+            }, false);
+
+            return xhr;
         },
-        error: function(data, status, error) {
-            alert(`AJAX failure: ${status}\nError: ${error}\nResponse: ${data.responseText}`);
+        type: "POST",
+        url: "api/upload",
+        contentType: "application/octet-stream",
+        headers: { "X-Filename": file.name },
+        data: await file.arrayBuffer(),
+        processData: false,
+        function() {
+            alert("Success");
         }
-    });
-}*/
-
-function setupImageCycling(imageData) {
-    imageList = imageData.split("\n");
-
-    showRandomImage();
-
-    $(document).click(function() {
-        showRandomImage();
-    });
-}
-
-function showRandomImage() {
-    if (!imageList) {
-        return;
-    }
-
-    if ($("#image").attr("src")) {
-        imageHistory.push($("#image").attr("src"));
-        window.history.pushState({}, "", "/images/");
-    }
-
-    newImage = imageList[Math.floor(Math.random() * imageList.length)];
-    $("#image").attr("src", newImage);
-}
-
-function showPreviousImage() {
-    $("#image").attr("src", imageHistory.pop());
+    }, 3600000);
 }

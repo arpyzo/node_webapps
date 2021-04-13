@@ -1,4 +1,4 @@
-var ajaxTimeout = 5000;
+var defaultTimeout = 5000;
 
 function ajaxGET(url, success) {
     ajaxRequest({
@@ -34,10 +34,10 @@ function ajaxJSONRequest(type, url, data, success) {
     });
 }
 
-function ajaxRequest(request) {
+function ajaxRequest(request, timeout) {
     $.ajax({
         ...request,
-        timeout: ajaxTimeout,
+        timeout: timeout || defaultTimeout,
         error: function(data, status, error) {
             alert(`
                 AJAX Failure: ${status}\n
