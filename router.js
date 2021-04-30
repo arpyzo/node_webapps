@@ -3,14 +3,6 @@ const fs = require("fs");
 function route(apps, request, response) {
     request.parseURL();
 
-    if (request.headers["content-type"] && request.headers["content-type"] == "application/json") {
-        try {
-            request.parseJSONData();
-        } catch(error) {
-            return response.return400(error);
-        }
-    }
-   
     // Required for relative link resolution
     if (request.url == "") {
         return response.redirect(301, request.app + "/");

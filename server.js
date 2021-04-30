@@ -11,8 +11,15 @@ function start(apps, port) {
         request.addListener("data", function(requestDataChunk) {
             dataBuffers.push(requestDataChunk);
         });
+
         request.addListener("end", function() {
             request.data = Buffer.concat(dataBuffers);
+            try {
+                request.parseData();
+            } catch(error) {
+                return response.return400(error);
+            }
+
             router.route(apps, request, response);
         });
     }

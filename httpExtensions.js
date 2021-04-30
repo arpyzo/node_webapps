@@ -18,6 +18,12 @@ class Request extends http.IncomingMessage {
         this.params = url.searchParams;
     }
 
+    parseData() {
+        if (this.headers["content-type"] && this.headers["content-type"] == "application/json") {
+            this.parseJSONData();
+        }
+    }
+
     parseJSONData() {
         this.dataObject = JSON.parse(this.data.toString("utf8"));
     }
