@@ -15,9 +15,9 @@ $(document).ready(function() {
             return alert(`File type is ${file.type}\nOnly CSVs accepted`);
         }
 
-        const matches = file.name.match(/^(\d\d_20\d\d)_(amazon|freedom|bank)/);
+        const matches = file.name.match(/^((?:Amazon|Freedom|Amex|Bank)(?: \d{4})?) - (\d{2}) (20\d{2})/);
         if (matches) {
-            uploadTransactions(matches[1], matches[2], file);
+            uploadTransactions(matches[3] + "_" + matches[2], matches[1].toLowerCase().replace(" ", "_"), file);
         } else {
             alert("Unable to parse filename!");
         }
