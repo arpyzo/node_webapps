@@ -46,6 +46,10 @@ class Money {
                 return response.return400("Missing or empty month and/or account and/or csv");
             }
 
+            if (this.doTransactionsExist(statementData.month, statementData.account)) {
+                return response.return409("Statement already saved on server");
+            }
+
             const transactions = this.parseStatement(statementData.account, statementData.csv);
             if (transactions) {
                 try {

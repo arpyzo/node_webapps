@@ -64,6 +64,10 @@ class Response extends http.ServerResponse {
         this.returnContent(400, "text/plain", `400 Bad request\n${error}\n`);
     }
 
+    return409(error = "") {
+        this.returnContent(409, "text/plain", `409 Conflict\n${error}\n`);
+    }
+
     return404() {
         this.returnContent(404, "text/plain", "404 Not found\n");
     }
