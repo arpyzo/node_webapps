@@ -36,12 +36,22 @@ $(document).ready(function() {
                 <td class="category"></td>
             </tr>
         `);
+
+        $(`#${rowId}`).children(".essential").text("");
     });
 
     $("#transactions").on("click", ".delete", function() {
         const subrowId = $(this).closest("tr").attr("id");
 
         $(`#${subrowId}`).remove();
+    });
+
+    // Amount calculator
+    $("#transactions").on("click", ".amount", function() {
+        const tableRow = $(this).closest("tr");
+        if (tableRow.attr("class") == "row" && tableRow.next("tr").attr("class") == "subrow") {
+            splitExtraAmount(tableRow.attr("id"));
+        }
     });
 
     // Essential Toggle
@@ -85,7 +95,7 @@ function makeTransactionsTable(transactions) {
     for (transaction of transactions) {
         $("#transactions").append(`
             <tr id="row-${transaction.id}" class="row">
-                <td class="split id">${transaction.id}</td>
+                <td class="id split">${transaction.id}</td>
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
                 <td class="type">${transaction.type}</td>
@@ -139,4 +149,38 @@ function gatherTransactions() {
     });
 
     return transactions;
+}
+
+function splitExtraAmount(rowId) {
+    const totalAmount = parseFloat($(`#${rowId}`).children(".amount").text());
+    const rows = [];
+    let rowsTotal = 0;
+
+    let tableRow = $(`#${rowId}`).next();
+    while (tableRow.attr("class") == "subrow") {
+        const rowAmount = parseFloat(tableRow.children(".amount").text());
+        rowsTotal += rowAmount;
+
+        rows.push({
+            rowId: tableRow.attr("id"),
+            amount: rowAmount
+        });
+        
+        tableRow = tableRow.next();
+    }
+
+    rows.sort(function(a, b) { return (a["amount"] > b["amount"]); });
+
+    let newAmount;
+    let newRowsTotal = 0;
+    for (const [i, row] of rows.entries()) {
+        if (i < rows.length - 1) {
+            newAmount = (row["amount"] / rowsTotal) * (totalAmount - rowsTotal) + row["amount"];
+            newRowsTotal += Math.round(newAmount * 100) / 100;
+        } else {
+            newAmount = totalAmount - newRowsTotal;
+        }
+
+        $(`#${row["rowId"]}`).children(".amount").text(newAmount.toFixed(2));
+    }
 }
