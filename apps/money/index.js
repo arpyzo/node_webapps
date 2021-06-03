@@ -102,15 +102,14 @@ class Money {
                         break;
                     }
                 }
-
                 transactions.push(transaction);
             }
         }
 
         transactions.sort(function(a, b) {
             return (
-                (a["date"].slice(6,10) + a["date"].slice(0,2) + a["date"].slice(3,5)) -
-                (b["date"].slice(6,10) + b["date"].slice(0,2) + b["date"].slice(3,5))
+                (b["date"].slice(6,10) + b["date"].slice(0,2) + b["date"].slice(3,5)) -
+                (a["date"].slice(6,10) + a["date"].slice(0,2) + a["date"].slice(3,5))
             );
         });
 
@@ -127,6 +126,8 @@ class Money {
 
             if (matches[2].startsWith("FUNDS TRANSFER") ||
                 matches[2].includes("CHASE MASTERCARD") ||
+                matches[2].includes("AMERICAN EXPRESS") ||
+                matches[2].includes("TD AMERITRADE") ||
                 !matches[3]) {
                 return null;
             }

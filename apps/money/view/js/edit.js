@@ -78,6 +78,7 @@ $(document).ready(function() {
 });
 
 function makeTransactionsTable(transactions) {
+console.log(transactions);
     $("#transactions tr").remove();
 
     $("#transactions").append(`
