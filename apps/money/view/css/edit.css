@@ -40,9 +40,13 @@ td {
   text-align: right;
 }
 
-.row-id {
-  text-align: right;
+.split {
+  width: 16px;
 }
+
+/*.row {
+  text-align: right;
+}*/
 
 .category {
   min-width: 100px;

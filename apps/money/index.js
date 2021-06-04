@@ -88,7 +88,6 @@ class Money {
         for (const line of statement.split(/\r?\n/).slice(1, -1)) {
             const transaction = account == "bank" ? this.parseBankCSVLine(line): this.parseCreditCardCSVLine(line);
             if (transaction) {
-                transaction["id"] = null;
                 transaction["essential"] = false;
                 transaction["category"] = "";
 
@@ -113,7 +112,7 @@ class Money {
             );
         });
 
-        return transactions.map(function(x, i) { x["id"] = i + 1 ; return x });
+        return transactions;
     }
 
     parseBankCSVLine(line) {
@@ -135,7 +134,6 @@ class Money {
             return {
                 date: matches[1].replace(/\//g, "-").replace(/-(\d\d)$/, "-20$1"),
                 description: matches[2].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, ""),
-                type: "Sale",
                 amount: Math.abs(matches[3]),
             }
         } else {
@@ -152,14 +150,13 @@ class Money {
             // 3 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
             // 4 - Amount
 
-            if (["Payment", "Adjustment"].includes(matches[3])) {
+            if (!["Sale", "Fee"].includes(matches[3])) {
                 return null;
             }
             
             return {
                 date: matches[1].replace(/\//g, "-"),
                 description: matches[2],
-                type: matches[3],
                 amount: Math.abs(matches[4]),
             }
         } else {

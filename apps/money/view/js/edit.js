@@ -1,5 +1,5 @@
 // Globals
-var nextSubrowId = 0;
+var nextRowId = 0;
 var selectedRow = "";
 
 $(document).ready(function() {
@@ -28,30 +28,20 @@ $(document).ready(function() {
         const rowId = $(event.target).closest("tr").attr("id");
 
         $(`#${rowId}`).after(`
-            <tr id="subrow-${++nextSubrowId}" class="subrow">
+            <tr id="row-${++nextRowId}" class="row">
                 <td class="delete"></td>
-                <td colspan="3"></td>
+                <td class="date">${$("#rowId").children(".date").text()}</td>
+                <td class="description">${$("#rowId").children(".description").text()}</td>
                 <td class="amount" contenteditable="true">0.00</td>
                 <td class="essential">false</td>
                 <td class="category"></td>
             </tr>
         `);
-
-        $(`#${rowId}`).children(".essential").text("");
     });
 
     $("#transactions").on("click", ".delete", function() {
-        const subrowId = $(this).closest("tr").attr("id");
-
-        $(`#${subrowId}`).remove();
-    });
-
-    // Amount calculator
-    $("#transactions").on("click", ".amount", function() {
-        const tableRow = $(this).closest("tr");
-        if (tableRow.attr("class") == "row" && tableRow.next("tr").attr("class") == "subrow") {
-            splitExtraAmount(tableRow.attr("id"));
-        }
+        const rowId = $(this).closest("tr").attr("id");
+        $(`#${rowId}`).remove();
     });
 
     // Essential Toggle
@@ -78,47 +68,33 @@ $(document).ready(function() {
 });
 
 function makeTransactionsTable(transactions) {
-console.log(transactions);
+    //console.log(transactions);
+
     $("#transactions tr").remove();
 
     $("#transactions").append(`
         <tr>
-            <th>id</th>
+            <th></th>
             <th>date</th>
             <th>description</th>
-            <th>type</th>
             <th>amount</th>
             <th>essential</th>
             <th>category</th>
         </tr>
     `);
 
-    for (transaction of transactions) {
+    for (const [i, transaction] of transactions.entries()) {
         $("#transactions").append(`
-            <tr id="row-${transaction.id}" class="row">
-                <td class="id split">${transaction.id}</td>
+            <tr id="row-${i}" class="row">
+                <td class="split"></td>
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
-                <td class="type">${transaction.type}</td>
                 <td class="amount">${transaction.amount.toFixed(2)}</td>
                 <td class="essential">${transaction.essential}</td>
                 <td class="category">${transaction.category}</td>
             </tr>
         `);
-
-        if (transaction["parts"]) {
-            for (part of transaction["parts"]) {
-                $("#transactions").append(`
-                    <tr id="subrow-${++nextSubrowId}" class="subrow">
-                        <td class="delete"></td>
-                        <td colspan="3"></td>
-                        <td class="amount" contenteditable="true">${part.amount.toFixed(2)}</td>
-                        <td class="essential">${part.essential}</td>
-                        <td class="category">${part.category}</td>
-                    </tr>
-                `);
-            }
-        }
+        nextRowId = transactions.length;
     }
 }
 
@@ -128,60 +104,14 @@ function gatherTransactions() {
     $("tr").each(function() {
         if ($(this).attr("class") == "row") {
             transactions.push({
-                id: parseInt($(".id", this).text()),
                 date: $(".date", this).text(),
                 description: $(".description", this).text(),
-                type: $(".type", this).text(),
                 amount: parseFloat($(".amount", this).text() || 0),
                 essential: ($(".essential", this).text() == "true"),
                 category: $(".category", this).text()
             });
         }
-        
-        if ($(this).attr("class") == "subrow") {
-            transactions[transactions.length - 1]["parts"] ??= [];
-
-            transactions[transactions.length - 1]["parts"].push({
-                amount: parseFloat($(".amount", this).text() || 0),
-                essential: ($(".essential", this).text() == "true"),
-                category: $(".category", this).text()
-            });
-         }
     });
 
     return transactions;
-}
-
-function splitExtraAmount(rowId) {
-    const totalAmount = parseFloat($(`#${rowId}`).children(".amount").text());
-    const rows = [];
-    let rowsTotal = 0;
-
-    let tableRow = $(`#${rowId}`).next();
-    while (tableRow.attr("class") == "subrow") {
-        const rowAmount = parseFloat(tableRow.children(".amount").text());
-        rowsTotal += rowAmount;
-
-        rows.push({
-            rowId: tableRow.attr("id"),
-            amount: rowAmount
-        });
-        
-        tableRow = tableRow.next();
-    }
-
-    rows.sort(function(a, b) { return (a["amount"] > b["amount"]); });
-
-    let newAmount;
-    let newRowsTotal = 0;
-    for (const [i, row] of rows.entries()) {
-        if (i < rows.length - 1) {
-            newAmount = (row["amount"] / rowsTotal) * (totalAmount - rowsTotal) + row["amount"];
-            newRowsTotal += Math.round(newAmount * 100) / 100;
-        } else {
-            newAmount = totalAmount - newRowsTotal;
-        }
-
-        $(`#${row["rowId"]}`).children(".amount").text(newAmount.toFixed(2));
-    }
 }
