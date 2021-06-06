@@ -27,11 +27,14 @@ $(document).ready(function() {
     $("#transactions").on("click", ".split", function() {
         const rowId = $(event.target).closest("tr").attr("id");
 
+        const rowDate = $(`#${rowId}`).children(".date").text();
+        const rowDescription = $(`#${rowId}`).children(".description").text();
+
         $(`#${rowId}`).after(`
             <tr id="row-${++nextRowId}" class="row">
                 <td class="delete"></td>
-                <td class="date">${$("#rowId").children(".date").text()}</td>
-                <td class="description">${$("#rowId").children(".description").text()}</td>
+                <td class="date">${rowDate}</td>
+                <td class="description">${rowDescription}</td>
                 <td class="amount" contenteditable="true">0.00</td>
                 <td class="essential">false</td>
                 <td class="category"></td>
