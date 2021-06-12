@@ -36,7 +36,7 @@ $(document).ready(function() {
                 <td class="date">${rowDate}</td>
                 <td class="description">${rowDescription}</td>
                 <td class="amount" contenteditable="true">0.00</td>
-                <td class="essential">false</td>
+                <td class="importance">Discretionary</td>
                 <td class="category"></td>
             </tr>
         `);
@@ -47,9 +47,11 @@ $(document).ready(function() {
         $(`#${rowId}`).remove();
     });
 
-    // Essential Toggle
-    $("#transactions").on("click", ".essential", function() {
-        $(this).text($(this).text() == "false");
+    // Importance Toggle
+    $("#transactions").on("click", ".importance", function() {
+        if      ($(this).text() == "Discretionary") { $(this).text("Critical"); }
+        else if ($(this).text() == "Essential")     { $(this).text("Discretionary"); }
+        else if ($(this).text() == "Critical")      { $(this).text("Essential"); }
     });
 
     // Category Selector
@@ -81,7 +83,7 @@ function makeTransactionsTable(transactions) {
             <th>date</th>
             <th>description</th>
             <th>amount</th>
-            <th>essential</th>
+            <th>importance</th>
             <th>category</th>
         </tr>
     `);
@@ -93,7 +95,7 @@ function makeTransactionsTable(transactions) {
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
                 <td class="amount">${transaction.amount.toFixed(2)}</td>
-                <td class="essential">${transaction.essential}</td>
+                <td class="importance">${transaction.importance}</td>
                 <td class="category">${transaction.category}</td>
             </tr>
         `);
@@ -110,7 +112,7 @@ function gatherTransactions() {
                 date: $(".date", this).text(),
                 description: $(".description", this).text(),
                 amount: parseFloat($(".amount", this).text() || 0),
-                essential: ($(".essential", this).text() == "true"),
+                importance: $(".importance", this).text(),
                 category: $(".category", this).text()
             });
         }

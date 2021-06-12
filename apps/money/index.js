@@ -88,14 +88,17 @@ class Money {
         for (const line of statement.split(/\r?\n/).slice(1, -1)) {
             const transaction = account == "bank" ? this.parseBankCSVLine(line): this.parseCreditCardCSVLine(line);
             if (transaction) {
-                transaction["essential"] = false;
+                transaction["importance"] = "Discretionary";
                 transaction["category"] = "";
 
                 for (const [vendor, category] of Object.entries(this.classification["Vendors"])) {
                     if (transaction["description"].toLowerCase().startsWith(vendor.toLowerCase()) ||
                         transaction["description"].toLowerCase().endsWith(vendor.toLowerCase())) {
 
-                        transaction["essential"] = this.classification["Essential"].includes(category);
+                        if (this.classification["Importance"][category]) {
+                            transaction["importance"] = this.classification["Importance"][category];
+                        }
+                    
                         transaction["category"] = category;
 
                         break;
