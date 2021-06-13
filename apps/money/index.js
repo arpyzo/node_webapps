@@ -2,8 +2,8 @@ const fs = require("fs");
 
 class Money {
     constructor(config) {
-        this.creditCardTransactionRegex = /^(\d{2}\/\d{2}\/\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/;
-        this.bankTransactionRegex = /^(\d{2}\/\d{2}\/\d{2}),[^,]*,([^,]+),([^,]*),/;
+        this.creditCardTransactionRegex = /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/;
+        this.bankTransactionRegex = /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]*,([^,]+),([^,]*),/;
 
         this.moneyDir = config.saveDir + "money/";
 
@@ -85,7 +85,7 @@ class Money {
 
     parseStatement(account, statement) {
         const transactions = [];
-        for (const line of statement.split(/\r?\n/).slice(1, -1)) {
+        for (const line of statement.split(/\r?\n/).slice(1)) {
             const transaction = account == "bank" ? this.parseBankCSVLine(line): this.parseCreditCardCSVLine(line);
             if (transaction) {
                 transaction["importance"] = "Discretionary";
@@ -119,48 +119,68 @@ class Money {
     }
 
     parseBankCSVLine(line) {
-        const matches = line.match(this.bankTransactionRegex);
+        const matches = this.sanitizeBankCSVLine(line).match(this.bankTransactionRegex);
         if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]}`);
-            // 1 - Transaction date
-            // 2 - Description
-            // 3 - Withdrawal
+            //console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]}`);
+            // 1 - Transaction month
+            // 2 - Transaction day
+            // 3 - Transaction year
+            // 4 - Description
+            // 5 - Withdrawal
 
-            if (matches[2].startsWith("FUNDS TRANSFER") ||
-                matches[2].includes("CHASE MASTERCARD") ||
-                matches[2].includes("AMERICAN EXPRESS") ||
-                matches[2].includes("TD AMERITRADE") ||
-                !matches[3]) {
+            if (matches[4].startsWith("FUNDS TRANSFER") ||
+                matches[4].includes("CHASE MASTERCARD") ||
+                matches[4].includes("AMERICAN EXPRESS") ||
+                matches[4].includes("TD AMERITRADE") ||
+                !matches[5]) {
                 return null;
             }
 
             return {
-                date: matches[1].replace(/\//g, "-").replace(/-(\d\d)$/, "-20$1"),
-                description: matches[2].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, ""),
-                amount: Math.abs(matches[3]),
+                date: `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`,
+                description: matches[4].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, ""),
+                amount: Math.abs(matches[5]),
             }
         } else {
             throw new Error(`Unmatched bank transaction CSV line: ${line}`)
         }
     }
 
+    sanitizeBankCSVLine(line) {
+        let newLine = "";
+        let inQuotes = false;
+
+        for (const char of line) {
+            if (char == '"') {
+                inQuotes = !inQuotes;
+            } 
+            else if (char != "," || (char == "," && !inQuotes)) {
+                newLine += char;
+            }
+        }
+
+        return newLine;
+    }
+
     parseCreditCardCSVLine(line) {
         const matches = line.match(this.creditCardTransactionRegex);
         if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]} - ${matches[2]} - ${matches[3]} - ${matches[4]}`);
-            // 1 - Transaction date
-            // 2 - Vendor*Transaction ID
-            // 3 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
-            // 4 - Amount
+            //console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]} - ${matches[6]}`);
+            // 1 - Transaction month
+            // 2 - Transaction day
+            // 3 - Transaction year
+            // 4 - Vendor*Transaction ID
+            // 5 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
+            // 6 - Amount
 
-            if (!["Sale", "Fee"].includes(matches[3])) {
+            if (!["Sale", "Fee"].includes(matches[5])) {
                 return null;
             }
             
             return {
-                date: matches[1].replace(/\//g, "-"),
-                description: matches[2],
-                amount: Math.abs(matches[4]),
+                date: `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`,
+                description: matches[4],
+                amount: Math.abs(matches[6]),
             }
         } else {
             throw new Error(`Unmatched credit card transaction CSV line: ${line}`)
