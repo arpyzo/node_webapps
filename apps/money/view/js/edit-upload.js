@@ -15,7 +15,7 @@ $(document).ready(function() {
             return alert(`File type is ${file.type}\nOnly CSVs accepted`);
         }
 
-        const matches = file.name.match(/^(Amazon|Freedom|Amex|Bank) - (\d{2}) (20\d{2})/);
+        const matches = file.name.match(/^(Alliant|Amazon|Amex|Bank|Citi|Freedom) - (\d{2}) (20\d{2})/);
         if (matches) {
             uploadTransactions(matches[3] + "_" + matches[2], matches[1].toLowerCase(), file);
         } else {

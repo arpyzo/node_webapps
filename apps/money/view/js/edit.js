@@ -94,7 +94,7 @@ function makeTransactionsTable(transactions) {
                 <td class="split"></td>
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
-                <td class="amount">${transaction.amount.toFixed(2)}</td>
+                <td class="amount" contenteditable="true">${transaction.amount.toFixed(2)}</td>
                 <td class="importance">${transaction.importance}</td>
                 <td class="category">${transaction.category}</td>
             </tr>

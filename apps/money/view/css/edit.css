@@ -52,7 +52,7 @@ td {
 /* Category Select */
 #categories {
   display: none;
-  grid-template-columns: 145px 145px 145px 145px 145px;
+  grid-template-columns: 155px 155px 155px 155px 155px;
   grid-gap: 1px;
 }
 
