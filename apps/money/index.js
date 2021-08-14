@@ -3,11 +3,11 @@ const fs = require("fs");
 class Money {
     constructor(config) {
         this.transactionParser = {
-            alliant: { regex: /^(\d\d?)\/(\d\d?)\/20(\d{2}),([^,]+),\$([^,]+),[^,]+,[^,]+/, description: 4, amount: 5 },
+            alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),\$([^,]+),[^,]+,[^,]+/, description: 4, amount: 5 },
             amazon:  { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
             amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
             bank:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]*,([^,]+),([^,]*),/, description: 4, amount: 5 },
-            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/20(\d{2}),([^,]+),([^,]+),/, description: 4, amount: 5 },
+            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),([^,]+),/, description: 4, amount: 5 },
             freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 }
         };
 
@@ -178,7 +178,7 @@ class Money {
                 amount: amount
             }
         } else {
-            throw new Error(`Unmatched transaction CSV line: ${line}`)
+            throw new Error(`Unmatched transaction ${account} CSV line: ${line}`)
         }
     }
 

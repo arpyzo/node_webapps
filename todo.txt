@@ -9,3 +9,5 @@ caching
 js function calling syntax
 
 write request data directly to file
+
+check content length header
