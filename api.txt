@@ -1,0 +1,26 @@
+LINKS
+  GET    /api/list   -
+  GET    /api/load   - Query (category)
+  PUT    /api/append - JSON  (category, link)
+  DELETE /api/remove - JSON  (category, link)
+
+NOTES
+  GET    /api/list   -
+  GET    /api/load   - Query (category)
+  PUT    /api/save   - JSON  (category, notes)
+
+IMAGES
+  GET    /api/list   -
+  GET    /api/random -
+  POST   /api/upload - ???
+
+MUSIC
+  GET    /api/list   - Query (artist, album)
+
+MONEY
+  POST   /api/load   - JSON  (month, account)
+  POST   /api/upload - JSON  (month, account, csv)
+  POST   /api/save   - JSON  (month, account, transactions)
+
+BOOKMARKS
+  PUT    /api/save   - JSON  (device, bookmarks)

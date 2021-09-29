@@ -6,8 +6,9 @@ class Money {
             alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),\$([^,]+),[^,]+,[^,]+/, description: 4, amount: 5 },
             amazon:  { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
             amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
-            bank:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]*,([^,]+),([^,]*),/, description: 4, amount: 5 },
-            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),([^,]+),/, description: 4, amount: 5 },
+            //bank:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]*,([^,]+),([^,]*),/, description: 4, amount: 5 },
+            bank:    { regex: /^20(\d{2})\-(\d{2})\-(\d{2}),[^,]+,([^,]+),([^,]+),([^,]+)/, description: 6, amount: 4, type: 5 },
+            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),([^,]*),/, description: 4, amount: 5 },
             freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 }
         };
 
@@ -151,23 +152,37 @@ class Money {
             console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]} - ${matches[6]}`);
 
             const date = `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`;
-            const description = matches[this.transactionParser[account]["description"]].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, "");
+            //const description = matches[this.transactionParser[account]["description"]].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, "");
+            const description = matches[this.transactionParser[account]["description"]].split("~")[0];
             const amount = Math.abs(matches[this.transactionParser[account]["amount"]]);
             const type = matches[this.transactionParser[account]["type"]];
 
             switch(account) {
                 case "bank":
-                    if (description.startsWith("FUNDS TRANSFER") ||
-                        description.includes("CHASE MASTERCARD") ||
-                        description.includes("AMERICAN EXPRESS") ||
-                        description.includes("TD AMERITRADE") ||
-                        !amount) {
+                    //if (description.startsWith("FUNDS TRANSFER") ||
+                    //    description.includes("CHASE MASTERCARD") ||
+                    //    description.includes("AMERICAN EXPRESS") ||
+                    //    description.includes("TD AMERITRADE") ||
+                    //    !amount) {
+                    //    return null;
+                    //}
+                    if (type == "Deposit") {
+                        return null;
+                    }
+                    if (description == ("ALLIANT CU XFER") ||
+                        description == ("AMERICAN EXPRESS ONLINE PMT") ||
+                        description.startsWith("Internet transfer")) {
                         return null;
                     }
                     break;
                 case "amazon":
                 case "freedom":
                     if (!["Sale", "Fee"].includes(type)) {
+                        return null;
+                    }
+                    break;
+                case "citi":
+                    if (!amount) {
                         return null;
                     }
             }
