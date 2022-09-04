@@ -3,13 +3,12 @@ const fs = require("fs");
 class Money {
     constructor(config) {
         this.transactionParser = {
-            alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),\$([^,]+),[^,]+,[^,]+/, description: 4, amount: 5 },
-            amazon:  { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
-            amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
-            //bank:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]*,([^,]+),([^,]*),/, description: 4, amount: 5 },
+            alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),\(?\$([^,]+)\)?,[^,]+,[^,]+/, description: 4, amount: 5 },
+            amazon:  { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
+            amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
             bank:    { regex: /^(\d{4})\-(\d{2})\-(\d{2}),[^,]+,([^,]+),([^,]+),([^,]+)/, description: 6, amount: 4, type: 5 },
-            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{2}),([^,]+),([^,]*),/, description: 4, amount: 5 },
-            freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{2}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 }
+            citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),([^,]*),/, description: 4, amount: 5 },
+            freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 }
         };
 
         this.moneyDir = config.saveDir + "money/";
@@ -94,7 +93,6 @@ class Money {
         const transactions = [];
         for (const line of statement.split(/\r?\n/).slice(1)) {
             const transaction = this.parseCSVLine(account, line);
-            //const transaction = account == "bank" ? this.parseBankCSVLine(line): this.parseCreditCardCSVLine(line);
             if (transaction) {
                 transaction["importance"] = "Discretionary";
                 transaction["category"] = "";
@@ -153,26 +151,20 @@ class Money {
 
             const date = (account == "bank")
                 ? `${matches[2]}/${matches[3]}/${matches[1]}`
-                : `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`;
-            //const description = matches[this.transactionParser[account]["description"]].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, "");
+                : `${matches[1]}/${matches[2]}/${matches[3]}`;
             const description = matches[this.transactionParser[account]["description"]].split("~")[0];
             const amount = Math.abs(matches[this.transactionParser[account]["amount"]]);
             const type = matches[this.transactionParser[account]["type"]];
 
             switch(account) {
                 case "bank":
-                    //if (description.startsWith("FUNDS TRANSFER") ||
-                    //    description.includes("CHASE MASTERCARD") ||
-                    //    description.includes("AMERICAN EXPRESS") ||
-                    //    description.includes("TD AMERITRADE") ||
-                    //    !amount) {
-                    //    return null;
-                    //}
                     if (type == "Deposit") {
                         return null;
                     }
                     if (description == ("ALLIANT CU XFER") ||
+                        description == ("ALLIANT CU ONLINE PMT") ||
                         description == ("AMERICAN EXPRESS ONLINE PMT") ||
+                        description == ("CHASE CARD SERV ONLINE PMT") ||
                         description.startsWith("Internet transfer")) {
                         return null;
                     }
@@ -184,7 +176,20 @@ class Money {
                     }
                     break;
                 case "citi":
-                    if (!amount) {
+                    if (!amount ||
+                        description == ("CITIBANK CRDT CD ONLINE PMT")) {
+                        return null;
+                    }
+                    break;
+                case "amex":
+                    if (description == ("ELECTRONIC PAYMENT RECEIVED-THANK") ||
+                        description == ("YOUR CASH REWARD/REFUND IS")) {
+                        return null;
+                    }
+                    break;
+                case "alliant":
+                    if (description.endsWith("CREDIT") ||
+                        description == ("PAYMENT - THANK YOU")) {
                         return null;
                     }
             }
@@ -196,59 +201,6 @@ class Money {
             }
         } else {
             throw new Error(`Unmatched transaction ${account} CSV line: ${line}`)
-        }
-    }
-
-    parseBankCSVLine(line) {
-        const matches = this.sanitizeCSVLine(line).match(this.bankTransactionRegex);
-        if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]}`);
-            // 1 - Transaction month
-            // 2 - Transaction day
-            // 3 - Transaction year
-            // 4 - Description
-            // 5 - Withdrawal amount (empty if deposit)
-
-            if (matches[4].startsWith("FUNDS TRANSFER") ||
-                matches[4].includes("CHASE MASTERCARD") ||
-                matches[4].includes("AMERICAN EXPRESS") ||
-                matches[4].includes("TD AMERITRADE") ||
-                !matches[5]) {
-                return null;
-            }
-
-            return {
-                date: `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`,
-                description: matches[4].replace(/ELECTRONIC BILL PAY [A-Z0-9]{8} |ACH DEBIT /, ""),
-                amount: Math.abs(matches[5]),
-            }
-        } else {
-            throw new Error(`Unmatched bank transaction CSV line: ${line}`)
-        }
-    }
-
-    parseCreditCardCSVLine(line) {
-        const matches = line.match(this.amazonTransactionRegex);
-        if (matches) {
-            //console.log(`TRANSACTION: ${matches[1]}/${matches[2]}/${matches[3]} - ${matches[4]} - ${matches[5]} - ${matches[6]}`);
-            // 1 - Transaction month
-            // 2 - Transaction day
-            // 3 - Transaction year
-            // 4 - Vendor*Transaction ID
-            // 5 - Transaction type (Sale, Return, Payment, Refund, Adjustment, Fee)
-            // 6 - Amount
-
-            if (!["Sale", "Fee"].includes(matches[5])) {
-                return null;
-            }
-            
-            return {
-                date: `${matches[1].padStart(2, "0")}/${matches[2].padStart(2, "0")}/20${matches[3]}`,
-                description: matches[4],
-                amount: Math.abs(matches[6]),
-            };
-        } else {
-            throw new Error(`Unmatched credit card transaction CSV line: ${line}`);
         }
     }
 

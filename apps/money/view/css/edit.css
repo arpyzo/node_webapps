@@ -44,6 +44,10 @@ td {
   width: 13px;
 }
 
+.weekday {
+  text-align: left;
+}
+
 .category {
   min-width: 100px;
   text-align: right;
@@ -52,7 +56,7 @@ td {
 /* Category Select */
 #categories {
   display: none;
-  grid-template-columns: 155px 155px 155px 155px 155px;
+  grid-template-columns: 160px 160px 160px 160px 160px;
   grid-gap: 1px;
 }
 

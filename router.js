@@ -25,7 +25,7 @@ function route(apps, request, response) {
             apps[request.app].handle(request, response);
         } catch(error) {
             console.trace(`Uncaught exception from app ${request.app}: ${error}`);
-            response.return500();
+            response.return500(error);
         }
     } else {
         response.return404();

@@ -33,6 +33,7 @@ $(document).ready(function() {
         $(`#${rowId}`).after(`
             <tr id="row-${++nextRowId}" class="row">
                 <td class="delete"></td>
+                <td class="weekday">${getWeekDay(rowDate)}</td>
                 <td class="date">${rowDate}</td>
                 <td class="description">${rowDescription}</td>
                 <td class="amount" contenteditable="true">0.00</td>
@@ -80,7 +81,7 @@ function makeTransactionsTable(transactions) {
     $("#transactions").append(`
         <tr>
             <th></th>
-            <th>date</th>
+            <th colspan="2">date</th>
             <th>description</th>
             <th>amount</th>
             <th>importance</th>
@@ -92,6 +93,7 @@ function makeTransactionsTable(transactions) {
         $("#transactions").append(`
             <tr id="row-${i}" class="row">
                 <td class="split"></td>
+                <td class="weekday">${getWeekDay(transaction.date)}</td>
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
                 <td class="amount" contenteditable="true">${transaction.amount.toFixed(2)}</td>
@@ -119,4 +121,10 @@ function gatherTransactions() {
     });
 
     return transactions;
+}
+
+function getWeekDay(dateStr) {
+    const theDate = new Date(dateStr.slice(6), dateStr.slice(0, 2), dateStr.slice(3, 5));
+    //return theDate.getDay();
+    return theDate.toLocaleString('en-US', {weekday: 'short'});
 }
