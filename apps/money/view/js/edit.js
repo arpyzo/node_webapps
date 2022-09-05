@@ -124,7 +124,6 @@ function gatherTransactions() {
 }
 
 function getWeekDay(dateStr) {
-    const theDate = new Date(dateStr.slice(6), dateStr.slice(0, 2), dateStr.slice(3, 5));
-    //return theDate.getDay();
+    const theDate = new Date(dateStr.slice(6), dateStr.slice(0, 2)-1, dateStr.slice(3, 5));
     return theDate.toLocaleString('en-US', {weekday: 'short'});
 }
