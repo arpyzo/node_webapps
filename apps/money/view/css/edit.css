@@ -56,13 +56,14 @@ td {
 /* Category Select */
 #categories {
   display: none;
-  grid-template-columns: 160px 160px 160px 160px 160px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(17, 30px);
   grid-gap: 1px;
 }
 
 .category-select {
   display: flex;
-  height: 30px;
+  width: 160px;
   background-color: #FFF;
   box-shadow: 0 0 0 1px black;
   justify-content: center;

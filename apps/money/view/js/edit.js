@@ -37,7 +37,6 @@ $(document).ready(function() {
                 <td class="date">${rowDate}</td>
                 <td class="description">${rowDescription}</td>
                 <td class="amount" contenteditable="true">0.00</td>
-                <td class="importance">Discretionary</td>
                 <td class="category"></td>
             </tr>
         `);
@@ -48,13 +47,6 @@ $(document).ready(function() {
         $(`#${rowId}`).remove();
     });
 
-    // Importance Toggle
-    $("#transactions").on("click", ".importance", function() {
-        if      ($(this).text() == "Discretionary") { $(this).text("Critical"); }
-        else if ($(this).text() == "Essential")     { $(this).text("Discretionary"); }
-        else if ($(this).text() == "Critical")      { $(this).text("Essential"); }
-    });
-
     // Category Selector
     $("#transactions").on("click", ".category", function(event) {
         selectedRow = $(this).closest("tr").attr("id");
@@ -62,8 +54,8 @@ $(document).ready(function() {
         $("#categories").css({
             "display": "grid",
             "position": "absolute",
-            "top": event.pageY - 15,
-            "left": event.pageX - 15
+            "top": event.pageY - 50,
+            "left": event.pageX - 400
         });
         $("#categories").show();
     });
@@ -84,7 +76,6 @@ function makeTransactionsTable(transactions) {
             <th colspan="2">date</th>
             <th>description</th>
             <th>amount</th>
-            <th>importance</th>
             <th>category</th>
         </tr>
     `);
@@ -97,7 +88,6 @@ function makeTransactionsTable(transactions) {
                 <td class="date">${transaction.date}</td>
                 <td class="description">${transaction.description}</td>
                 <td class="amount" contenteditable="true">${transaction.amount.toFixed(2)}</td>
-                <td class="importance">${transaction.importance}</td>
                 <td class="category">${transaction.category}</td>
             </tr>
         `);
@@ -114,7 +104,6 @@ function gatherTransactions() {
                 date: $(".date", this).text(),
                 description: $(".description", this).text(),
                 amount: parseFloat($(".amount", this).text() || 0),
-                importance: $(".importance", this).text(),
                 category: $(".category", this).text()
             });
         }

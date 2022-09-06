@@ -94,19 +94,14 @@ class Money {
         for (const line of statement.split(/\r?\n/).slice(1)) {
             const transaction = this.parseCSVLine(account, line);
             if (transaction) {
-                transaction["importance"] = "Discretionary";
                 transaction["category"] = "";
 
+                // TODO: Convert to hash
                 for (const [vendor, category] of Object.entries(this.classification["Vendors"])) {
                     if (transaction["description"].toLowerCase().startsWith(vendor.toLowerCase()) ||
                         transaction["description"].toLowerCase().endsWith(vendor.toLowerCase())) {
 
-                        if (this.classification["Importance"][category]) {
-                            transaction["importance"] = this.classification["Importance"][category];
-                        }
-                    
                         transaction["category"] = category;
-
                         break;
                     }
                 }
