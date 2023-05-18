@@ -3,7 +3,7 @@ const fs = require("fs");
 class Money {
     constructor(config) {
         this.transactionParser = {
-            alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),\(?\$([^,]+)\)?,[^,]+,[^,]+/, description: 4, amount: 5 },
+            alliant: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),\(?\$([^,)]+)\)?,[^,]+,[^,]+/, description: 4, amount: 5 },
             amazon:  { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
             amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
             bank:    { regex: /^(\d{4})\-(\d{2})\-(\d{2}),[^,]+,([^,]+),([^,]+),([^,]+)/, description: 6, amount: 4, type: 5 },
@@ -160,6 +160,7 @@ class Money {
                         description == ("ALLIANT CU ONLINE PMT") ||
                         description == ("AMERICAN EXPRESS ONLINE PMT") ||
                         description == ("CHASE CARD SERV ONLINE PMT") ||
+                        description == ("CITIBANK CRDT CD ONLINE PMT") ||
                         description.startsWith("Internet transfer")) {
                         return null;
                     }
