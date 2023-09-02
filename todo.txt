@@ -11,3 +11,5 @@ js function calling syntax
 write request data directly to file
 
 check content length header
+
+AJAX status update as rectangle in upper-right
