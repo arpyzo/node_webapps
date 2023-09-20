@@ -1,0 +1,41 @@
+<html>
+<head>
+<style>
+
+#categories {
+  display: grid;
+  grid-template-columns: repeat(2, 200px);
+  grid-auto-rows: minmax(100px, auto);
+  grid-gap: 1px;
+}
+
+.category-select {
+  display: flex;
+  width: 160px;
+  background-color: #FFF;
+  box-shadow: 0 0 0 1px black;
+  justify-content: center;
+  align-items: center;
+background: linear-gradient(
+    to top,
+    red,
+    red 70%,
+    transparent 70%,
+    transparent 100%
+  );
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="categories">
+    <div class="category-select">Appliances</div>
+    <div class="category-select">Books Lauren</div>
+    <div class="category-select">Books Rob</div>
+    <div class="category-select">Books Sid</div>
+</div>
+
+</body>
+</html>
