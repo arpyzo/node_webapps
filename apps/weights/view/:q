@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="us-ascii">
+
+    <script src="js/jquery.js"></script>
+    <script src="js/index.js"></script>
+
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="exercise">Bench Press</div>
+    <div class="weight-pair">
+        <div class="weight-widget">
+            <img id="bench_press" class="robert minus" src="img/minus.jpg">
+            <div id="r_weight" class="weight">110</div>
+            <img id="r_plus_img" src="img/plus.jpg">
+        </div>
+
+        <div class="weight-widget">
+            <img id="l_img" src="img/minus.jpg">
+            <div id="l_weight" class="weight">110</div>
+            <img id="l_plus_img" src="img/plus.jpg">
+        </div>
+    </div>
+</body>
+
+</html>

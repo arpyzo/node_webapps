@@ -13,3 +13,11 @@ write request data directly to file
 check content length header
 
 AJAX status update as rectangle in upper-right
+
+auto-save (5s after edit) -> prevent window close when not saved
+
+ ---
+
+Move auth from Apache to NJ
+
+MFA via API

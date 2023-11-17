@@ -16,7 +16,7 @@ function route(apps, request, response) {
             return response.returnAsset(__dirname + "/view_libs/orbitry.js");
         }
 
-        if (/\.(?:html|css|js)$/.test(request.url)) {
+        if (/\.(?:html|jpg|css|js)$/.test(request.url)) {
             return response.returnAsset(__dirname + "/apps/" + request.app + "/view" + request.url);
         }
 

@@ -1,0 +1,25 @@
+div {
+  display: flex;
+  align-items: center;
+}
+
+.exercise {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.weight-widget {
+  margin-right: 20px;
+}
+
+img {
+  width: 50px;
+}
+
+.weight {
+  height: 50px;
+  text-align: center;
+  font-size: 50px;
+  padding: 0px 10px 0px;
+  margin: 5px;
+}
