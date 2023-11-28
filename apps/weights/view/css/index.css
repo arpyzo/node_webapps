@@ -1,25 +1,26 @@
 div {
   display: flex;
   align-items: center;
+  margin: 20px;
 }
 
 .exercise {
-  font-size: 50px;
+  font-size: 100px;
   font-weight: bold;
 }
 
 .weight-widget {
-  margin-right: 20px;
+  margin-right: 50px;
 }
 
 img {
-  width: 50px;
+  width: 100px;
 }
 
 .weight {
-  height: 50px;
+  height: 100px;
   text-align: center;
-  font-size: 50px;
+  font-size: 100px;
   padding: 0px 10px 0px;
   margin: 5px;
 }
