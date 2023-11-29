@@ -1,16 +1,39 @@
-div {
+.div {
   display: flex;
   align-items: center;
   margin: 20px;
 }
 
+.muscle {
+  font-size: 100px;
+  font-weight: bold;
+  margin: auto;
+  width: 50%;
+}
+
 .exercise {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+
   font-size: 100px;
   font-weight: bold;
 }
 
 .weight-widget {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+
   margin-right: 50px;
+}
+
+.weight-pair {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+
+  margin-bottom: 75px;
 }
 
 img {
@@ -18,9 +41,17 @@ img {
 }
 
 .weight {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+
   height: 100px;
   text-align: center;
   font-size: 100px;
   padding: 0px 10px 0px;
   margin: 5px;
+}
+
+hr {
+  border-top: 5px solid;
 }
