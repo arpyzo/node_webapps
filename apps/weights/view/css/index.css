@@ -4,6 +4,20 @@
   margin: 20px;
 }
 
+.muscle-section {
+  width: 100%;
+  height: 60px;
+  border-bottom: 5px solid black;
+  margin-bottom: 75px;
+  text-align: center
+}
+
+.muscle-section-name {
+  background-color: white;
+  padding: 0 20px;
+  font-size: 100px;
+}
+
 .muscle {
   font-size: 100px;
   font-weight: bold;
@@ -50,8 +64,4 @@ img {
   font-size: 100px;
   padding: 0px 10px 0px;
   margin: 5px;
-}
-
-hr {
-  border-top: 5px solid;
 }
