@@ -12,9 +12,25 @@ class Weights {
 
         if (request.url == "/api/load") {
             try {
-                return response.returnJSON(this.getExercises());
+                return response.returnText(this.getWeights());
             } catch(error) {
-                console.trace(`Error loading exercises: ${error}`);
+                console.trace(`Error loading weights: ${error}`);
+                return response.return500(error);
+            }
+        }
+
+        if (request.url == "/api/save") {
+            const saveData = request.dataObject;
+
+            if (!saveData.weights) {
+                return response.return400("Missing or empty weights");
+            }
+
+            try {
+                this.saveWeights(saveData.weights);
+                return response.return200();
+            } catch(error) {
+                console.trace(`Error saving weights: ${error}`);
                 return response.return500(error);
             }
         }
@@ -22,8 +38,12 @@ class Weights {
         response.return404();
     }
 
-    getExercises() {
-        return fs.readFileSync(`${this.saveDir}weights.json`);
+    getWeights() {
+        return fs.readFileSync(this.saveDir + 'weights.csv');
+    }
+
+    saveWeights(weights) {
+        fs.writeFileSync(this.saveDir + 'weights.csv', weights);
     }
 }
 
