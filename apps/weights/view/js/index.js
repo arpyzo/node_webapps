@@ -59,15 +59,9 @@ function addButtonHandler() {
     $("img").click(function() {
         buttonId = $(this).attr('id');
         idDividerTokens = buttonId.split('-');
-        console.log(idDividerTokens);
         [person, exercise, incrementDirection] = [idDividerTokens[0], idDividerTokens.slice(1, -1).join('-'), idDividerTokens.at(-1)]
+
         weightId = person + '-' + exercise;
-
-        //console.log('PERSON: ' + person);
-        //console.log('EXERCISE: ' + exercise);
-        //console.log('INC: ' + incrementDirection);
-        //console.log('WEIGHT ID: ' + weightId);
-
         increment = weightIncrements[exercise]
         weight = parseFloat($("#" + weightId).text());
 
@@ -75,8 +69,7 @@ function addButtonHandler() {
         $("#" + weightId).text(newWeight);
 
         clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(saveWeights, 500);
-        //saveTimeout = setTimeout(gatherWeights, 500);
+        saveTimeout = setTimeout(saveWeights, 5000);
     });
 }
 
@@ -91,17 +84,13 @@ function gatherWeights() {
 
     $("div").each(function() {
         if ($(this).attr("class") == "muscle-section-divider") {
-            //console.log($(this).find("span").text());
             weights += $(this).find("span").text() + "\n";
         }
         if ($(this).attr("class") == "exercise") {
-            //console.log($(this).text());
-            weights += $(this).text() + " ";
-            //console.log(weightIncrements[toIdFormat($(this).text())]);
+            weights += $(this).text() + ", ";
             weights += weightIncrements[toIdFormat($(this).text())] + ", "; 
         }
         if ($(this).attr("class") == "weight") {
-            //console.log($(this).text());
             weights += $(this).text();
             weights += $(this).attr("id").startsWith("robert") ? ", " : "\n";
         }
