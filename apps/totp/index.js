@@ -40,7 +40,7 @@ class Totp {
         let otp = (parseInt(digest.substr(offset * 2, 8), 16) & parseInt("7fffffff", 16)).toString();
         otp = otp.substr(Math.max(otp.length - 6, 0), 6);
 
-        return `${otp} (${totpTimeRemaining}s)`;
+        return `${otp} ${totpTimeRemaining}s`;
     }
 
     base32ToHex(base32) {
