@@ -27,7 +27,7 @@ function showRandomImage() {
 
     if ($("#image").attr("src")) {
         imageHistory.push($("#image").attr("src"));
-        window.history.pushState({}, "", "/images/");
+        window.history.pushState({}, "", "/private/");
     }
 
     newImage = imageList[Math.floor(Math.random() * imageList.length)];

@@ -1,8 +1,8 @@
 const fs = require("fs");
 
-class Images {
+class Private {
     constructor(config) {
-        this.imageDir = config.webDir + "images/";
+        this.imageDir = config.webDir + "private/";
     }
 
     handle(request, response) {
@@ -50,4 +50,4 @@ class Images {
     }
 }
 
-exports.app = Images;
+exports.app = Private;
