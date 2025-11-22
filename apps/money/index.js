@@ -8,7 +8,8 @@ class Money {
             amex:    { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),[^,]+,[^,]+,([^,]+)/, description: 4, amount: 5 },
             bank:    { regex: /^(\d{4})\-(\d{2})\-(\d{2}),[^,]+,([^,]+),([^,]+),([^,]+)/, description: 6, amount: 4, type: 5 },
             citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),([^,]*),/, description: 4, amount: 5 },
-            freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 }
+            freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
+            wells:   { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),\-?([\d\.]+),\*,,([^,]+)/, description: 5, amount: 4 },
         };
 
         this.moneyDir = config.saveDir + "money/";
