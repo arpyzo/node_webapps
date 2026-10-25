@@ -9,7 +9,7 @@ class Money {
             bank:    { regex: /^(\d{4})\-(\d{2})\-(\d{2}),[^,]+,([^,]+),([^,]+),([^,]+)/, description: 6, amount: 4, type: 5 },
             citi:    { regex: /^[^,]+,(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),([^,]*),/, description: 4, amount: 5 },
             freedom: { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),[^,]+,([^,]+),[^,]*,([^,]+),([^,]+),/, description: 4, amount: 6, type: 5 },
-            wells:   { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),\-?([\d\.]+),\*,,([^,]+)/, description: 5, amount: 4 },
+            wells:   { regex: /^(\d\d?)\/(\d\d?)\/(\d{4}),([^,]+),\-?([\d\.]+),,[^,]/, description: 4, amount: 5 },
         };
 
         this.moneyDir = config.saveDir + "money/";
@@ -162,6 +162,8 @@ class Money {
                         description == ("AMERICAN EXPRESS ONLINE PMT") ||
                         description == ("CHASE CARD SERV ONLINE PMT") ||
                         description == ("CITIBANK CRDT CD ONLINE PMT") ||
+                        description == ("WELLS FARGO CC ONLINE PMT") ||
+                        description == ("BLOOMWELL529 ACH") ||
                         description.startsWith("Internet transfer")) {
                         return null;
                     }
@@ -184,6 +186,11 @@ class Money {
                         return null;
                     }
                     break;
+                case "wells":
+                    if (description == ("PAYMENT - THANK YOU") ||
+                        description.startsWith("CASH BACK REDEMPTION")) {
+                        return null;
+                    }
                 case "alliant":
                     if (description.endsWith("CREDIT") ||
                         description == ("PAYMENT - THANK YOU")) {

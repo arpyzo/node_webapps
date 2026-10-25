@@ -57,7 +57,7 @@ td {
 #categories {
   display: none;
   grid-auto-flow: column;
-  grid-template-rows: repeat(17, 30px);
+  grid-template-rows: repeat(18, 30px);
   grid-gap: 1px;
 }
 
