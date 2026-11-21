@@ -149,7 +149,7 @@ class Money {
                 ? `${matches[2]}/${matches[3]}/${matches[1]}`
                 : `${matches[1]}/${matches[2]}/${matches[3]}`;
             const description = matches[this.transactionParser[account]["description"]].split("~")[0];
-            const amount = Math.abs(matches[this.transactionParser[account]["amount"]]);
+            const amount = Math.abs(matches[this.transactionParser[account]["amount"]].replace('$', ''));
             const type = matches[this.transactionParser[account]["type"]];
 
             switch(account) {
@@ -176,7 +176,8 @@ class Money {
                     break;
                 case "citi":
                     if (!amount ||
-                        description == ("CITIBANK CRDT CD ONLINE PMT")) {
+                        description == ("CITIBANK CRDT CD ONLINE PMT") ||
+                        description == ("PAYMENT THANK YOU")) {
                         return null;
                     }
                     break;
